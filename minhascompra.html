@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Compras - Auto Mega</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --dark-color: #1a1a1a;
+            --light-color: #f8f9fa;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .user-sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            display: block;
+            border: 3px solid var(--primary-color);
+        }
+
+        .user-name {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.8rem;
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .purchases-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        select, input {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .purchase-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .purchase-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .purchase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .purchase-id {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .purchase-date {
+            color: var(--gray-color);
+        }
+
+        .purchase-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-delivered {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-processing {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: var(--warning-color);
+        }
+
+        .purchase-details {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .vehicle-image {
+            width: 100%;
+            border-radius: 8px;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+        }
+
+        .vehicle-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .vehicle-specs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .spec {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        .purchase-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .purchase-amount {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .purchase-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-color);
+        }
+
+        .empty-state img {
+            width: 150px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .purchase-details {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-image {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="user-sidebar">
+            <img src="https://via.placeholder.com/150" alt="Foto do usuário" class="profile-pic">
+            <h3 class="user-name">João Silva</h3>
+            
+            <ul class="sidebar-menu">
+                <li><a href="#">Minha Conta</a></li>
+                <li><a href="#" class="active">Minhas Compras</a></li>
+                <li><a href="#">Financiamentos</a></li>
+                <li><a href="#">Favoritos</a></li>
+                <li><a href="#">Configurações</a></li>
+                <li><a href="#">Sair</a></li>
+            </ul>
+        </aside>
+
+        <main class="purchases-content">
+            <h2 class="section-title">Minhas Compras</h2>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Filtrar por:</label>
+                    <select>
+                        <option>Todos os status</option>
+                        <option>Entregue</option>
+                        <option>Processando</option>
+                        <option>Cancelado</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Ordenar por:</label>
+                    <select>
+                        <option>Mais recente</option>
+                        <option>Mais antigo</option>
+                        <option>Maior valor</option>
+                        <option>Menor valor</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Período:</label>
+                    <select>
+                        <option>Últimos 3 meses</option>
+                        <option>Últimos 6 meses</option>
+                        <option>Este ano</option>
+                        <option>Todos</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Compra 1 -->
+            <div class="purchase-card">
+                <div class="purchase-header">
+                    <div>
+                        <span class="purchase-id">Pedido #AM20240001</span>
+                        <span class="purchase-date">- 15/01/2024</span>
+                    </div>
+                    <span class="purchase-status status-delivered">Entregue</span>
+                </div>
+                
+                <div class="purchase-details">
+                    <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Veículo" class="vehicle-image">
+                    
+                    <div class="vehicle-info">
+                        <h3>SUV Mega 2024</h3>
+                        <div class="vehicle-specs">
+                            <span class="spec">🟢 Vermelho</span>
+                            <span class="spec">⛽ Flex</span>
+                            <span class="spec">🔄 Automático</span>
+                            <span class="spec">🧭 0 km</span>
+                        </div>
+                        <p>SUV completo com teto solar, multimídia 10", rodas de liga leve 18", bancos em couro e sistema de som premium.</p>
+                    </div>
+                </div>
+                
+                <div class="purchase-footer">
+                    <div class="purchase-amount">Total: R$ 120.000,00</div>
+                    <div class="purchase-actions">
+                        <button class="btn btn-outline">Detalhes</button>
+                        <button class="btn btn-primary">Avaliar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compra 2 -->
+            <div class="purchase-card">
+                <div class="purchase-header">
+                    <div>
+                        <span class="purchase-id">Pedido #AM20230045</span>
+                        <span class="purchase-date">- 22/11/2023</span>
+                    </div>
+                    <span class="purchase-status status-processing">Processando</span>
+                </div>
+                
+                <div class="purchase-details">
+                    <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Veículo" class="vehicle-image">
+                    
+                    <div class="vehicle-info">
+                        <h3>Hatch Mega 2023</h3>
+                        <div class="vehicle-specs">
+                            <span class="spec">🔵 Azul</span>
+                            <span class="spec">⛽ Flex</span>
+                            <span class="spec">🔄 Automático</span>
+                            <span class="spec">🧭 8.500 km</span>
+                        </div>
+                        <p>Hatch seminovo com único dono, completo com multimídia, sensor de estacionamento e garantia de 1 ano.</p>
+                    </div>
+                </div>
+                
+                <div class="purchase-footer">
+                    <div class="purchase-amount">Total: R$ 85.500,00</div>
+                    <div class="purchase-actions">
+                        <button class="btn btn-outline">Detalhes</button>
+                        <button class="btn btn-outline">Acompanhar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado vazio (exemplo quando não há compras) -->
+            <!-- <div class="empty-state">
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" alt="Nenhuma compra">
+                <h3>Nenhuma compra encontrada</h3>
+                <p>Você ainda não realizou nenhuma compra em nossa loja.</p>
+                <button class="btn btn-primary">Ver Veículos</button>
+            </div> -->
+
+            <div class="pagination">
+                <button class="btn btn-outline">Anterior</button>
+                <button class="btn btn-primary">1</button>
+                <button class="btn btn-outline">2</button>
+                <button class="btn btn-outline">Próximo</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função para carregar as compras do usuário
+        function loadUserPurchases() {
+            // Aqui você faria uma chamada AJAX para buscar as compras reais do usuário
+            console.log('Carregando compras do usuário...');
+            
+            // Simulação de dados
+            // Na implementação real, você substituiria pelo retorno da API
+        }
+
+        // Event listeners para os filtros
+        document.querySelectorAll('.filters select').forEach(select => {
+            select.addEventListener('change', function() {
+                loadUserPurchases();
+            });
+        });
+
+        // Carregar dados iniciais
+        window.onload = function() {
+            loadUserPurchases();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Atendimento | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            color: #ecf0f1;
+            perspective: 1000px;
+        }
+
+        /* Efeito de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-1000px) rotateX(360deg); opacity: 0; }
+        }
+
+        /* Efeito neon */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7)); }
+            100% { opacity: 0.1; filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5)); }
+        }
+
+        /* Header */
+        .site-header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 15px 0;
+            border-bottom: 1px solid #e74c3c;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Conteúdo Principal */
+        .support-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e74c3c;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        /* Canais de Atendimento */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .channel-card {
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .channel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+        }
+
+        .channel-icon {
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .channel-title {
+            font-size: 22px;
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+
+        .channel-info {
+            color: #bdc3c7;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .channel-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .channel-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* FAQ */
+        .faq-section {
+            margin: 80px 0;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            background: rgba(15, 23, 30, 0.5);
+        }
+
+        .faq-question:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer-inner {
+            padding: 0 0 20px 0;
+            color: #bdc3c7;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 20px 20px 20px;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s;
+            color: #e74c3c;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Formulário */
+        .form-section {
+            background: rgba(44, 62, 80, 0.3);
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 60px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .form-title {
+            color: #e74c3c;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ecf0f1;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #ecf0f1;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #e74c3c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto 0;
+            font-weight: bold;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .channels-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeitos de Fundo -->
+    <div class="particles" id="particles"></div>
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="site-logo">AutoMega</div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="support-container">
+        <h1 class="section-title"><i class="fas fa-headset"></i> Central de Atendimento</h1>
+        
+        <!-- Canais de Atendimento -->
+        <div class="channels-grid">
+            <!-- WhatsApp -->
+            <div class="channel-card">
+                <div class="channel-icon"><i class="fab fa-whatsapp"></i></div>
+                <h3 class="channel-title">WhatsApp</h3>
+                <p class="channel-info">Atendimento rápido pelo celular. Respondemos em até 5 minutos durante o horário comercial.</p>
+                <a href="https://wa.me/5511999999999" class="channel-button">
+                    <i class="fab fa-whatsapp"></i> Enviar Mensagem
+                </a>
+            </div>
+            
+            <!-- Telefone -->
+            <div class="channel-card">
+                <div class="channel-icon"><i class="fas fa-phone-alt"></i></div>
+                <h3 class="channel-title">Telefone</h3>
+                <p class="channel-info">Fale com nossos especialistas:<br>
+                    <strong>4002-8922</strong> (capitais)<br>
+                    <strong>0800 123 4567</strong> (demais regiões)
+                </p>
+                <a href="tel:1140028922" class="channel-button">
+                    <i class="fas fa-phone-alt"></i> Ligar Agora
+                </a>
+            </div>
+            
+            <!-- Chat Online -->
+            <div class="channel-card">
+                <div class="channel-icon"><i class="fas fa-comment-dots"></i></div>
+                <h3 class="channel-title">Chat Online</h3>
+                <p class="channel-info">Atendimento instantâneo em nosso site. Disponível 24 horas para dúvidas simples.</p>
+                <a href="#" id="open-chat" class="channel-button">
+                    <i class="fas fa-comment-dots"></i> Iniciar Chat
+                </a>
+            </div>
+            
+            <!-- E-mail -->
+            <div class="channel-card">
+                <div class="channel-icon"><i class="fas fa-envelope"></i></div>
+                <h3 class="channel-title">E-mail</h3>
+                <p class="channel-info">Para assuntos mais detalhados ou documentação. Respondemos em até 24h úteis.</p>
+                <a href="mailto:contato@automega.com.br" class="channel-button">
+                    <i class="fas fa-envelope"></i> Enviar E-mail
+                </a>
+            </div>
+            
+            <!-- Presencial -->
+            <div class="channel-card">
+                <div class="channel-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <h3 class="channel-title">Atendimento Presencial</h3>
+                <p class="channel-info">Visite nossa concessionária:<br>
+                    Av. Automotiva, 1000 - São Paulo/SP<br>
+                    Seg-Sex: 8h às 18h | Sáb: 9h às 13h
+                </p>
+                <a href="#" class="channel-button">
+                    <i class="fas fa-directions"></i> Como Chegar
+                </a>
+            </div>
+            
+            <!-- SOS Veículo -->
+            <div class="channel-card">
+                <div class="channel-icon"><i class="fas fa-car-crash"></i></div>
+                <h3 class="channel-title">SOS Veículo</h3>
+                <p class="channel-info">Emergências 24h para clientes AutoMega. Guincho, pane seca ou problemas mecânicos.</p>
+                <a href="tel:08007891011" class="channel-button" style="background: #f39c12;">
+                    <i class="fas fa-ambulance"></i> 0800 789 1011
+                </a>
+            </div>
+        </div>
+        
+        <!-- FAQ -->
+        <section class="faq-section">
+            <h2 class="section-title"><i class="fas fa-question-circle"></i> Perguntas Frequentes</h2>
+            <div class="faq-container">
+                <!-- Pergunta 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como consultar o status do meu financiamento?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Acesse nossa <a href="#" style="color: #e74c3c;">área do cliente</a> com seu CPF e senha. Na seção "Meus Financiamentos" você encontrará todos os detalhes, incluindo parcelas pagas e pendentes.</p>
+                            <p>Caso não tenha cadastro, ligue para nossa central no número 4002-8922 (opção 3) ou envie um e-mail para <a href="mailto:financeiro@automega.com.br" style="color: #e74c3c;">financeiro@automega.com.br</a> com seu número de contrato.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quais documentos preciso para comprar um veículo?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Documentação básica necessária:</p>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>RG e CPF (originais e cópias)</li>
+                                <li>Comprovante de residência atualizado</li>
+                                <li>Comprovante de renda (holerites ou declaração)</li>
+                                <li>CNH válida</li>
+                                <li>Certidão de casamento (se casado)</li>
+                            </ul>
+                            <p style="margin-top: 10px;">Para financiamento, podem ser solicitados documentos adicionais.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como agendar uma revisão para meu veículo?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Você pode agendar de três formas:</p>
+                            <ol style="margin-top: 10px; padding-left: 20px;">
+                                <li>Pelo WhatsApp <a href="https://wa.me/5511999999999" style="color: #e74c3c;">(11) 99999-9999</a></li>
+                                <li>Ligando para nossa central de atendimento (4002-8922 opção 2)</li>
+                                <li>Diretamente no site, na <a href="#" style="color: #e74c3c;">área de agendamentos</a></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Formulário -->
+        <section class="form-section">
+            <h3 class="form-title"><i class="fas fa-paper-plane"></i> Não encontrou o que precisava?</h3>
+            <form>
+                <div class="form-group">
+                    <label for="contact-name" class="form-label">Nome Completo *</label>
+                    <input type="text" id="contact-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-email" class="form-label">E-mail *</label>
+                    <input type="email" id="contact-email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-subject" class="form-label">Assunto *</label>
+                    <select id="contact-subject" class="form-control" required>
+                        <option value="">Selecione...</option>
+                        <option value="financiamento">Financiamento</option>
+                        <option value="vendas">Dúvidas sobre Veículos</option>
+                        <option value="posvenda">Pós-Venda/Revisão</option>
+                        <option value="seguro">Seguro</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-message" class="form-label">Mensagem *</label>
+                    <textarea id="contact-message" class="form-control" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-button">Enviar Mensagem</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                
+                // Fecha outras FAQs
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Simular abertura de chat
+        document.getElementById('open-chat').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Chat iniciado! Um atendente vai conversar com você agora.');
+        });
+    </script>
+</body>
+</html>

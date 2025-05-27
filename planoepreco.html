@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos e Preços | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            color: #ecf0f1;
+        }
+
+        /* Efeito de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-1000px) rotateX(360deg); opacity: 0; }
+        }
+
+        /* Efeito neon */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7)); }
+            100% { opacity: 0.1; filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5)); }
+        }
+
+        /* Header */
+        .site-header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 15px 0;
+            border-bottom: 1px solid #e74c3c;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Conteúdo Principal */
+        .pricing-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e74c3c;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        /* Planos */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .plan-card {
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.2);
+        }
+
+        .plan-header {
+            padding: 25px;
+            background: rgba(15, 23, 30, 0.5);
+            text-align: center;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .plan-name {
+            font-size: 22px;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .plan-price span {
+            font-size: 16px;
+            color: #bdc3c7;
+        }
+
+        .plan-features {
+            padding: 25px;
+        }
+
+        .feature-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-item i {
+            color: #e74c3c;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .plan-button {
+            display: block;
+            text-align: center;
+            padding: 15px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .plan-button:hover {
+            background: #c0392b;
+        }
+
+        /* Plano Destaque */
+        .highlight {
+            border-left-color: #f39c12;
+        }
+
+        .highlight .plan-name {
+            color: #f39c12;
+        }
+
+        .highlight .plan-button {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        /* Comparação */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 60px;
+            background: rgba(44, 62, 80, 0.3);
+        }
+
+        .comparison-table th, 
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .comparison-table th {
+            background: rgba(15, 23, 30, 0.7);
+            color: #e74c3c;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .check-icon {
+            color: #2ecc71;
+        }
+
+        .times-icon {
+            color: #e74c3c;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeitos de Fundo -->
+    <div class="particles" id="particles"></div>
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="site-logo">AutoMega</div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="pricing-container">
+        <h1 class="section-title"><i class="fas fa-tags"></i> Planos e Preços</h1>
+        
+        <div class="plans-grid">
+            <!-- Plano Básico -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Básico</h3>
+                    <div class="plan-price">R$ 99,90 <span>/mês</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Cobertura contra terceiros</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Assistência 24h limitada</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Carro reserva (7 dias/ano)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-times"></i>
+                        <span>Cobertura para roubo</span>
+                    </div>
+                </div>
+                <a href="#" class="plan-button">Contratar</a>
+            </div>
+            
+            <!-- Plano Completo (Destaque) -->
+            <div class="plan-card highlight">
+                <div class="plan-header">
+                    <h3 class="plan-name">Completo</h3>
+                    <div class="plan-price">R$ 199,90 <span>/mês</span></div>
+                    <div style="color: #f39c12; font-size: 14px;">Mais popular</div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Cobertura total (colisão, roubo, incêndio)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Assistência 24h completa</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Carro reserva (15 dias/ano)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Vidros, faróis e lanternas</span>
+                    </div>
+                </div>
+                <a href="#" class="plan-button">Contratar</a>
+            </div>
+            
+            <!-- Plano Premium -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h3 class="plan-name">Premium</h3>
+                    <div class="plan-price">R$ 299,90 <span>/mês</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Cobertura total ampliada</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Assistência premium 24h</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Carro reserva (30 dias/ano)</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check"></i>
+                        <span>Cobertura internacional</span>
+                    </div>
+                </div>
+                <a href="#" class="plan-button">Contratar</a>
+            </div>
+        </div>
+        
+        <!-- Tabela de Comparação -->
+        <h2 class="section-title" style="margin-top: 80px;"><i class="fas fa-exchange-alt"></i> Comparação de Planos</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Benefício</th>
+                    <th>Básico</th>
+                    <th>Completo</th>
+                    <th>Premium</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cobertura contra terceiros</td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                </tr>
+                <tr>
+                    <td>Cobertura total (colisão, roubo, incêndio)</td>
+                    <td><i class="fas fa-times times-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                </tr>
+                <tr>
+                    <td>Carro reserva (dias/ano)</td>
+                    <td>7</td>
+                    <td>15</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>Cobertura internacional</td>
+                    <td><i class="fas fa-times times-icon"></i></td>
+                    <td><i class="fas fa-times times-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                </tr>
+                <tr>
+                    <td>Assistência VIP 24h</td>
+                    <td><i class="fas fa-times times-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                    <td><i class="fas fa-check check-icon"></i></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

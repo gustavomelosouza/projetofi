@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojas Físicas | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            color: #ecf0f1;
+            perspective: 1000px;
+        }
+
+        /* Efeito de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-1000px) rotateX(360deg); opacity: 0; }
+        }
+
+        /* Efeito neon */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7)); }
+            100% { opacity: 0.1; filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5)); }
+        }
+
+        /* Header */
+        .site-header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 15px 0;
+            border-bottom: 1px solid #e74c3c;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Conteúdo Principal */
+        .stores-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e74c3c;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        /* Filtros */
+        .filters-section {
+            background: rgba(44, 62, 80, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ecf0f1;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #ecf0f1;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e74c3c'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .filter-select:focus {
+            border-color: #e74c3c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+
+        .filter-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .filter-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Lojas */
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .store-card {
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .store-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+        }
+
+        .store-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .store-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .store-card:hover .store-image img {
+            transform: scale(1.05);
+        }
+
+        .store-content {
+            padding: 20px;
+        }
+
+        .store-name {
+            font-size: 22px;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .store-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #bdc3c7;
+        }
+
+        .store-info i {
+            color: #e74c3c;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .store-hours {
+            background: rgba(15, 23, 30, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .hours-title {
+            color: #e74c3c;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .hours-list {
+            list-style: none;
+        }
+
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .store-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .action-primary {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .action-primary:hover {
+            background: #c0392b;
+        }
+
+        .action-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ecf0f1;
+            border: 1px solid #e74c3c;
+        }
+
+        .action-secondary:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        /* Mapa */
+        .map-section {
+            height: 500px;
+            margin-top: 60px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e74c3c;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .stores-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .store-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <!-- Efeitos de Fundo -->
+    <div class="particles" id="particles"></div>
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="site-logo">AutoMega</div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="stores-container">
+        <h1 class="section-title"><i class="fas fa-map-marker-alt"></i> Nossas Lojas Físicas</h1>
+        
+        <!-- Filtros -->
+        <section class="filters-section">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="state" class="filter-label">Estado</label>
+                    <select id="state" class="filter-select">
+                        <option value="">Todos os estados</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PR">Paraná</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="city" class="filter-label">Cidade</label>
+                    <select id="city" class="filter-select">
+                        <option value="">Todas as cidades</option>
+                        <option value="sao-paulo">São Paulo</option>
+                        <option value="campinas">Campinas</option>
+                        <option value="rio-de-janeiro">Rio de Janeiro</option>
+                        <option value="belo-horizonte">Belo Horizonte</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="service" class="filter-label">Serviço</label>
+                    <select id="service" class="filter-select">
+                        <option value="">Todos os serviços</option>
+                        <option value="vendas">Vendas</option>
+                        <option value="financiamento">Financiamento</option>
+                        <option value="revisao">Revisão</option>
+                        <option value="seguro">Seguro</option>
+                    </select>
+                </div>
+            </div>
+            <button class="filter-button"><i class="fas fa-filter"></i> Filtrar Lojas</button>
+        </section>
+        
+        <!-- Lista de Lojas -->
+        <div class="stores-grid">
+            <!-- Loja 1 -->
+            <div class="store-card">
+                <div class="store-image">
+                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="AutoMega São Paulo">
+                </div>
+                <div class="store-content">
+                    <h3 class="store-name">AutoMega São Paulo</h3>
+                    <div class="store-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Av. Automotiva, 1000 - Vila Olímpia</span>
+                    </div>
+                    <div class="store-info">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>(11) 4002-8922</span>
+                    </div>
+                    <div class="store-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>sp@automega.com.br</span>
+                    </div>
+                    
+                    <div class="store-hours">
+                        <div class="hours-title">
+                            <i class="fas fa-clock"></i>
+                            <span>Horário de Funcionamento</span>
+                        </div>
+                        <ul class="hours-list">
+                            <li><span>Seg-Sex:</span> <span>08:00 - 18:00</span></li>
+                            <li><span>Sábado:</span> <span>09:00 - 13:00</span></li>
+                            <li><span>Domingo:</span> <span>Fechado</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="store-actions">
+                        <a href="#" class="action-button action-primary">
+                            <i class="fas fa-route"></i> Como chegar
+                        </a>
+                        <a href="#" class="action-button action-secondary">
+                            <i class="fas fa-calendar-alt"></i> Agendar visita
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loja 2 -->
+            <div class="store-card">
+                <div class="store-image">
+                    <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="AutoMega Rio de Janeiro">
+                </div>
+                <div class="store-content">
+                    <h3 class="store-name">AutoMega Rio de Janeiro</h3>
+                    <div class="store-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Av. das Américas, 5000 - Barra da Tijuca</span>
+                    </div>
+                    <div class="store-info">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>(21) 2500-8922</span>
+                    </div>
+                    <div class="store-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>rj@automega.com.br</span>
+                    </div>
+                    
+                    <div class="store-hours">
+                        <div class="hours-title">
+                            <i class="fas fa-clock"></i>
+                            <span>Horário de Funcionamento</span>
+                        </div>
+                        <ul class="hours-list">
+                            <li><span>Seg-Sex:</span> <span>08:00 - 18:00</span></li>
+                            <li><span>Sábado:</span> <span>09:00 - 14:00</span></li>
+                            <li><span>Domingo:</span> <span>09:00 - 12:00</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="store-actions">
+                        <a href="#" class="action-button action-primary">
+                            <i class="fas fa-route"></i> Como chegar
+                        </a>
+                        <a href="#" class="action-button action-secondary">
+                            <i class="fas fa-calendar-alt"></i> Agendar visita
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loja 3 -->
+            <div class="store-card">
+                <div class="store-image">
+                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="AutoMega Campinas">
+                </div>
+                <div class="store-content">
+                    <h3 class="store-name">AutoMega Campinas</h3>
+                    <div class="store-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Av. John Boyd Dunlop, 3500 - Jardim Londres</span>
+                    </div>
+                    <div class="store-info">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>(19) 3200-8922</span>
+                    </div>
+                    <div class="store-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>campinas@automega.com.br</span>
+                    </div>
+                    
+                    <div class="store-hours">
+                        <div class="hours-title">
+                            <i class="fas fa-clock"></i>
+                            <span>Horário de Funcionamento</span>
+                        </div>
+                        <ul class="hours-list">
+                            <li><span>Seg-Sex:</span> <span>08:00 - 18:00</span></li>
+                            <li><span>Sábado:</span> <span>09:00 - 13:00</span></li>
+                            <li><span>Domingo:</span> <span>Fechado</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="store-actions">
+                        <a href="#" class="action-button action-primary">
+                            <i class="fas fa-route"></i> Como chegar
+                        </a>
+                        <a href="#" class="action-button action-secondary">
+                            <i class="fas fa-calendar-alt"></i> Agendar visita
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mapa -->
+        <section class="map-section" id="map">
+            <!-- Mapa será inserido via JavaScript -->
+        </section>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Inicializar mapa
+        const map = L.map('map').setView([-23.5505, -46.6333], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Adicionar marcadores (exemplo com 3 lojas)
+        const stores = [
+            {
+                name: "AutoMega São Paulo",
+                lat: -23.5925,
+                lng: -46.6886,
+                address: "Av. Automotiva, 1000 - Vila Olímpia"
+            },
+            {
+                name: "AutoMega Rio de Janeiro",
+                lat: -22.9997,
+                lng: -43.3572,
+                address: "Av. das Américas, 5000 - Barra da Tijuca"
+            },
+            {
+                name: "AutoMega Campinas",
+                lat: -22.9056,
+                lng: -47.0608,
+                address: "Av. John Boyd Dunlop, 3500 - Jardim Londres"
+            }
+        ];
+
+        stores.forEach(store => {
+            const marker = L.marker([store.lat, store.lng]).addTo(map);
+            marker.bindPopup(`
+                <strong>${store.name}</strong><br>
+                ${store.address}<br>
+                <a href="#" onclick="centerMap(${store.lat}, ${store.lng})" 
+                   style="color:#e74c3c;text-decoration:underline;">
+                   Ver detalhes
+                </a>
+            `);
+        });
+
+        // Centralizar mapa na localização do usuário
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                map.setView([position.coords.latitude, position.coords.longitude], 12);
+            });
+        }
+
+        // Função para centralizar o mapa
+        window.centerMap = function(lat, lng) {
+            map.setView([lat, lng], 15);
+        };
+
+        // Filtros interativos (simulação)
+        document.querySelector('.filter-button').addEventListener('click', function() {
+            const state = document.getElementById('state').value;
+            const city = document.getElementById('city').value;
+            
+            alert(`Filtrando por:\nEstado: ${state || 'Todos'}\nCidade: ${city || 'Todas'}`);
+            // Aqui você implementaria a filtragem real das lojas
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprensa - AutoMega</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        body { 
+            background-color: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            perspective: 1000px; 
+        }
+        
+        /* Efeito de partículas (mesmo do SAC) */
+        .particles { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -1; 
+        }
+        
+        .particle { 
+            position: absolute; 
+            background-color: rgba(231, 76, 60, 0.5); 
+            border-radius: 50%; 
+            animation: floatParticle 15s infinite linear; 
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translateY(0) rotateX(0) rotateY(0); }
+            50% { transform: translateY(-100px) rotateX(180deg) rotateY(180deg); }
+            100% { transform: translateY(0) rotateX(360deg) rotateY(360deg); }
+        }
+        
+        /* Container principal */
+        .press-container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: rgba(15, 23, 30, 0.85);
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(44, 62, 80, 0.5);
+            padding: 40px;
+            margin: 40px 20px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: floatContainer 6s ease-in-out infinite;
+        }
+        
+        @keyframes floatContainer {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #e74c3c;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        .logo p {
+            color: #ecf0f1;
+            font-size: 1.1rem;
+        }
+        
+        /* Seções */
+        .press-section {
+            margin-bottom: 40px;
+        }
+        
+        .press-section h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        /* Releases */
+        .release {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .release:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.2);
+        }
+        
+        .release h3 {
+            color: #ecf0f1;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .release .meta {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .release p {
+            color: #ecf0f1;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .release .download {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .release .download:hover {
+            background: #c0392b;
+        }
+        
+        /* Materiais */
+        .materials {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .material-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .material-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .material-icon {
+            font-size: 2.5rem;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .material-card h3 {
+            color: #ecf0f1;
+            margin-bottom: 10px;
+        }
+        
+        .material-card p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Contato */
+        .press-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .contact-card {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .contact-card h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .contact-card p, .contact-card a {
+            color: #bdc3c7;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .contact-card a {
+            display: block;
+            margin-top: 10px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .contact-card a:hover {
+            color: #e74c3c;
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .press-container {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+            
+            .materials {
+                grid-template-columns: 1fr;
+            }
+            
+            .press-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efeito de partículas 3D -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Container principal -->
+    <div class="press-container">
+        <div class="logo">
+            <h1>AutoMega Imprensa</h1>
+            <p>Central de informações para jornalistas e parceiros</p>
+        </div>
+        
+        <!-- Seção de Releases -->
+        <section class="press-section">
+            <h2>Comunicados e Releases</h2>
+            
+            <div class="release">
+                <h3>AutoMega lança novo modelo elétrico com autonomia recorde</h3>
+                <div class="meta">
+                    <span><i class="far fa-calendar-alt"></i> 15/03/2024</span>
+                    <span><i class="far fa-file-alt"></i> Release</span>
+                </div>
+                <p>A AutoMega anuncia o lançamento do Mega-Eletro, primeiro veículo 100% elétrico da marca com autonomia de 600km. O lançamento marca a entrada da empresa no mercado de veículos sustentáveis.</p>
+                <a href="#" class="download"><i class="fas fa-download"></i> Baixar Release Completo</a>
+            </div>
+            
+            <div class="release">
+                <h3>AutoMega é eleita a marca mais lembrada pelo 5º ano consecutivo</h3>
+                <div class="meta">
+                    <span><i class="far fa-calendar-alt"></i> 10/02/2024</span>
+                    <span><i class="far fa-file-alt"></i> Comunicado</span>
+                </div>
+                <p>Pesquisa anual do Instituto Automotivo revela que a AutoMega continua sendo a marca mais lembrada pelos consumidores brasileiros na categoria veículos premium.</p>
+                <a href="#" class="download"><i class="fas fa-download"></i> Baixar Comunicado</a>
+            </div>
+        </section>
+        
+        <!-- Seção de Materiais -->
+        <section class="press-section">
+            <h2>Materiais para Download</h2>
+            
+            <div class="materials">
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3>Fotos em Alta Resolução</h3>
+                    <p>Imagens dos veículos, fábrica e eventos em alta qualidade</p>
+                    <a href="#" class="download">Acessar Galeria</a>
+                </div>
+                
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Vídeos Institucionais</h3>
+                    <p>Vídeos de lançamentos, comerciais e making of</p>
+                    <a href="#" class="download">Acessar Vídeos</a>
+                </div>
+                
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Logotipos e Manual</h3>
+                    <p>Arquivos vetoriais e manual de uso da marca</p>
+                    <a href="#" class="download">Baixar Kit</a>
+                </div>
+                
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Dados e Estatísticas</h3>
+                    <p>Informações sobre vendas, mercado e desempenho</p>
+                    <a href="#" class="download">Baixar Dados</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção de Contato -->
+        <section class="press-section">
+            <h2>Contato para Imprensa</h2>
+            <p style="color: #ecf0f1; margin-bottom: 20px;">Nossa equipe de comunicação está disponível para esclarecer dúvidas, agendar entrevistas e fornecer informações adicionais.</p>
+            
+            <div class="press-contact">
+                <div class="contact-card">
+                    <h3><i class="fas fa-user-tie"></i> Assessoria de Imprensa</h3>
+                    <p>Responsável: Juliana Almeida</p>
+                    <a href="mailto:imprensa@automega.com.br"><i class="fas fa-envelope"></i> imprensa@automega.com.br</a>
+                    <a href="tel:+5511999999999"><i class="fas fa-phone"></i> (11) 99999-9999</a>
+                </div>
+                
+                <div class="contact-card">
+                    <h3><i class="fab fa-whatsapp"></i> WhatsApp</h3>
+                    <p>Canal exclusivo para jornalistas</p>
+                    <a href="https://wa.me/5511999999999"><i class="fab fa-whatsapp"></i> Enviar mensagem</a>
+                </div>
+                
+                <div class="contact-card">
+                    <h3><i class="fas fa-calendar-check"></i> Agendamentos</h3>
+                    <p>Para entrevistas e eventos</p>
+                    <a href="mailto:eventos@automega.com.br"><i class="fas fa-envelope"></i> eventos@automega.com.br</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Efeito de partículas
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

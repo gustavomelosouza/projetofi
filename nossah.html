@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossa História - AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f171e;
+            color: #fff;
+            overflow-x: hidden;
+            perspective: 1000px;
+            line-height: 1.6;
+        }
+
+        /* Efeito 3D com partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotateX(360deg) rotateY(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, rgba(15, 23, 30, 0.9), rgba(44, 62, 80, 0.9));
+            backdrop-filter: blur(8px);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+            margin-left: 10px;
+        }
+
+        .logo-icon {
+            color: #e74c3c;
+            font-size: 32px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: #e74c3c;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #e74c3c;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-actions a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .user-actions a:hover {
+            color: #e74c3c;
+        }
+
+        .login-btn {
+            padding: 10px 20px;
+            border: 1px solid #e74c3c;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #e74c3c;
+            color: #fff !important;
+        }
+
+        /* Hero História */
+        .history-hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to right, rgba(15, 23, 30, 0.9), rgba(44, 62, 80, 0.7)), 
+                        url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1480&q=80') center/cover no-repeat;
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .history-hero h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .history-hero h1 span {
+            color: #e74c3c;
+        }
+
+        .history-hero p {
+            font-size: 20px;
+            color: #bdc3c7;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Linha do Tempo */
+        .timeline-section {
+            padding: 80px 5%;
+            background-color: #0f171e;
+            position: relative;
+        }
+
+        .timeline-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #e74c3c, #2c3e50);
+        }
+
+        .timeline-item {
+            padding: 20px 50px;
+            position: relative;
+            width: 50%;
+            margin-bottom: 50px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            padding: 30px;
+            background-color: rgba(44, 62, 80, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .timeline-year {
+            position: absolute;
+            top: 20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e74c3c, #2c3e50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 0 0 5px rgba(44, 62, 80, 0.5);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-year {
+            right: -50px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-year {
+            left: -50px;
+        }
+
+        .timeline-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #e74c3c;
+        }
+
+        .timeline-text {
+            color: #bdc3c7;
+            line-height: 1.6;
+        }
+
+        /* Equipe Fundadora */
+        .founders-section {
+            padding: 80px 5%;
+            background: linear-gradient(to bottom, #0f171e, #1a252f);
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: #e74c3c;
+        }
+
+        .section-subtitle {
+            color: #bdc3c7;
+            font-size: 18px;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .founder-card {
+            background-color: rgba(44, 62, 80, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.5s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .founder-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .founder-image {
+            height: 350px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .founder-info {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .founder-name {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .founder-role {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .founder-bio {
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .founder-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            background-color: #e74c3c;
+            transform: translateY(-3px);
+        }
+
+        /* Valores */
+        .values-section {
+            padding: 80px 5%;
+            background-color: #1a252f;
+            text-align: center;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background-color: rgba(44, 62, 80, 0.5);
+            border-radius: 10px;
+            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .value-icon {
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .value-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .value-description {
+            color: #bdc3c7;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to right, #1a252f, #2c3e50);
+            padding: 50px 5% 20px;
+            border-top: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #e74c3c;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: #e74c3c;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            nav ul {
+                margin: 20px 0;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0 15px 10px;
+            }
+
+            .user-actions {
+                margin-top: 15px;
+            }
+
+            .history-hero h1 {
+                font-size: 36px;
+            }
+
+            .timeline-container::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 80px;
+                padding-right: 20px;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-year,
+            .timeline-item:nth-child(even) .timeline-year {
+                left: 10px;
+                right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efeito de partículas 3D -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-car logo-icon"></i>
+            <h1>AutoMega</h1>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="telai.html">Início</a></li>
+                <li><a href="produtos.html">Veículos</a></li>
+                <li><a href="sobre.html" class="active">Nossa História</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+        
+        <div class="user-actions">
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+    </header>
+    
+    <!-- Hero História -->
+    <section class="history-hero">
+        <div>
+            <h1>Nossa <span>Jornada</span> Automotiva</h1>
+            <p>Da garagem de um amante de carros à maior plataforma de vendas de veículos do país</p>
+        </div>
+    </section>
+    
+    <!-- Linha do Tempo -->
+    <section class="timeline-section">
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-year">2005</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">O Primeiro Passo</h3>
+                    <p class="timeline-text">Carlos Silva, nosso fundador, começou a revender carros usados em uma pequena garagem em São Paulo. Seu amor por automóveis e atendimento personalizado logo conquistou clientes fiéis.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2010</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Nascimento da AutoMega</h3>
+                    <p class="timeline-text">Com a parceria de Ana Oliveira e Ricardo Santos, a AutoMega foi oficialmente fundada como uma loja de veículos premium, oferecendo garantia e qualidade incomparáveis no mercado.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2014</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Primeira Loja Virtual</h3>
+                    <p class="timeline-text">Lançamos nosso primeiro website, revolucionando a forma de comprar e vender carros no Brasil, com fotos em 360° e relatórios completos de cada veículo.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2018</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Expansão Nacional</h3>
+                    <p class="timeline-text">Com centros de vistoria em 5 capitais brasileiras, nos tornamos a primeira plataforma nacional de vendas de veículos com cobertura em todo o território.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2021</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Tecnologia e Inovação</h3>
+                    <p class="timeline-text">Implementamos inteligência artificial para avaliação de veículos e realidade aumentada para visitas virtuais, oferecendo a melhor experiência digital do mercado.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">Hoje</div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Líderes de Mercado</h3>
+                    <p class="timeline-text">Com mais de 50.000 veículos vendidos e 98% de satisfação dos clientes, continuamos inovando para transformar o sonho do carro perfeito em realidade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Equipe Fundadora -->
+    <section class="founders-section">
+        <h2 class="section-title">Nossos Fundadores</h2>
+        <p class="section-subtitle">A paixão por carros e o compromisso com a excelência que moldaram a AutoMega</p>
+        
+        <div class="founders-grid">
+            <div class="founder-card">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Carlos Silva" class="founder-image">
+                <div class="founder-info">
+                    <h3 class="founder-name">Carlos Silva</h3>
+                    <p class="founder-role">CEO & Fundador</p>
+                    <p class="founder-bio">Ex-mecânico e apaixonado por carros desde criança, Carlos teve a visão de criar uma plataforma transparente para compra e venda de veículos.</p>
+                    <div class="founder-social">
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="founder-card">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ana Oliveira" class="founder-image">
+                <div class="founder-info">
+                    <h3 class="founder-name">Ana Oliveira</h3>
+                    <p class="founder-role">Diretora Comercial</p>
+                    <p class="founder-bio">Especialista em marketing digital, Ana transformou a AutoMega em uma marca reconhecida nacionalmente no setor automotivo.</p>
+                    <div class="founder-social">
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="founder-card">
+                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ricardo Santos" class="founder-image">
+                <div class="founder-info">
+                    <h3 class="founder-name">Ricardo Santos</h3>
+                    <p class="founder-role">Diretor de Tecnologia</p>
+                    <p class="founder-bio">Responsável pela plataforma digital da AutoMega, Ricardo lidera a inovação tecnológica que diferencia nossa empresa no mercado.</p>
+                    <div class="founder-social">
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Valores -->
+    <section class="values-section">
+        <h2 class="section-title">Nossos Valores</h2>
+        <p class="section-subtitle">Princípios que guiam cada decisão e ação em nossa empresa</p>
+        
+        <div class="values-grid">
+            <div class="value-card">
+                <i class="fas fa-handshake value-icon"></i>
+                <h3 class="value-title">Transparência</h3>
+                <p class="value-description">Acreditamos em relações claras e honestas com todos os nossos clientes e parceiros, garantindo confiança em cada negociação.</p>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-medal value-icon"></i>
+                <h3 class="value-title">Excelência</h3>
+                <p class="value-description">Buscamos constantemente a melhor qualidade em nossos serviços, desde o atendimento até a seleção dos veículos.</p>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-heart value-icon"></i>
+                <h3 class="value-title">Paixão por Carros</h3>
+                <p class="value-description">Nossa equipe é formada por entusiastas que compartilham o mesmo amor por automóveis que nossos clientes.</p>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-users value-icon"></i>
+                <h3 class="value-title">Foco no Cliente</h3>
+                <p class="value-description">Colocamos as necessidades e sonhos dos nossos clientes no centro de todas as nossas decisões e ações.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Sobre a AutoMega</h3>
+                <ul>
+                    <li><a href="sobre.html">Quem somos</a></li>
+                    <li><a href="nossah.html">Nossa história</a></li>
+                    <li><a href="trabalheconosco.html">Trabalhe conosco</a></li>
+                    <li><a href="termos.html">Termos de uso</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Para Compradores</h3>
+                <ul>
+                    <li><a href="comocomprar.html">Como comprar</a></li>
+                    <li><a href="teste.html">Financiamento</a></li>
+                    <li><a href="seguro.html">Seguro auto</a></li>
+                    <li><a href="duvidasfrequentes.html">Dúvidas frequentes</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Para Vendedores</h3>
+                <ul>
+                    <li><a href="anuncia.html">Anuncie seu veículo</a></li>
+                    <li><a href="planoepreco.html">Planos e preços</a></li>
+                    <li><a href="dicas.html">Dicas para vender</a></li>
+                    <li><a href="consultores.html">Consultores</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contato</h3>
+                <ul>
+                    <li><a href="contato.html">Central de atendimento</a></li>
+                    <li><a href="loja.html">Lojas físicas</a></li>
+                    <li><a href="sac.html">SAC</a></li>
+                    <li><a href="omprensa.html">Imprensa</a></li>
+                </ul>
+                
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 AutoMega - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Adicione o Font Awesome para os ícones -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- Script para as partículas 3D -->
+    <script>
+        // Cria partículas 3D
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Posição aleatória
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Tamanho aleatório
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Opacidade aleatória
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            // Atraso de animação aleatório
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

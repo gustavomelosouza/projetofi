@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossos Veículos | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            perspective: 1000px;
+            color: #ecf0f1;
+        }
+
+        /* Efeito 3D com partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotateX(360deg) rotateY(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Efeito de neón para o fundo */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.05;
+                filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            }
+            100% {
+                opacity: 0.1;
+                filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5));
+            }
+        }
+
+        .header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        .nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #e74c3c;
+        }
+
+        .main {
+            padding: 40px 0;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .page-subtitle {
+            color: #bdc3c7;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: rgba(15, 23, 30, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-label {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #ecf0f1;
+            min-width: 150px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #ecf0f1;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #bdc3c7;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: rgba(15, 23, 30, 0.85);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(44, 62, 80, 0.5);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(231, 76, 60, 0.2);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .product-content {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #ecf0f1;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+
+        .product-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-meta-item i {
+            color: #e74c3c;
+        }
+
+        .product-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .product-price small {
+            font-size: 14px;
+            color: #bdc3c7;
+            font-weight: normal;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #e74c3c;
+            color: white;
+            border: 1px solid #e74c3c;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 10px;
+        }
+
+        .pagination-link {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: rgba(15, 23, 30, 0.7);
+            color: #ecf0f1;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .pagination-link:hover {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .pagination-link.active {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .footer {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+            backdrop-filter: blur(8px);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #e74c3c;
+        }
+
+        .copyright {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .search-bar {
+                max-width: 100%;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeito de partículas -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Efeito de carro em neón -->
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">AutoMega</div>
+                <nav class="nav">
+                    <a href="telai.html"><i class="fas fa-home"></i> Início</a>
+                    <a href="produtos.html" class="active"><i class="fas fa-car"></i> Veículos</a>
+                    <a href="ofertas.html"><i class="fas fa-percentage"></i> Ofertas</a>
+                    <a href="conta.html"><i class="fas fa-user"></i> Minha Conta</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Nossos Veículos</h1>
+                <p class="page-subtitle">Encontre o carro dos seus sonhos em nossa concessionária premium. Todos os veículos passam por rigorosa inspeção.</p>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Ordenar por:</span>
+                    <select class="filter-select">
+                        <option>Recomendados</option>
+                        <option>Menor Preço</option>
+                        <option>Maior Preço</option>
+                        <option>Mais Novos</option>
+                        <option>Mais Antigos</option>
+                    </select>
+                </div>
+                
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Buscar veículos...">
+                </div>
+                
+                <div class="filter-group">
+                    <span class="filter-label">Filtrar:</span>
+                    <select class="filter-select">
+                        <option>Todos</option>
+                        <option>Novos</option>
+                        <option>Seminovos</option>
+                        <option>Luxo</option>
+                        <option>Esportivos</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Grade de Produtos -->
+            <div class="products-grid">
+                <!-- Veículo 1 -->
+                <div class="product-card">
+                    <span class="product-badge">Novo</span>
+                    <img src="https://img.olx.com.br/images/33/330566749366273.webp" alt="Audi RS5" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Audi RS5 Sportback</h3>
+                        <div class="product-meta">
+                            <span class="product-meta-item"><i class="fas fa-calendar-alt"></i> 2023</span>
+                            <span class="product-meta-item"><i class="fas fa-tachometer-alt"></i> 0 km</span>
+                            <span class="product-meta-item"><i class="fas fa-gas-pump"></i> Gasolina</span>
+                        </div>
+                        <div class="product-price">R$ 549.900 <small>à vista</small></div>
+                        <div class="product-actions">
+                            <a href="#" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Comprar</a>
+                            <a href="#" class="btn btn-outline"><i class="fas fa-info-circle"></i> Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Veículo 2 -->
+                <div class="product-card">
+                    <span class="product-badge">Seminovo</span>
+                    <img src="https://i.ytimg.com/vi/iZt7Fwu91FI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCl1APnpyrZMoSNVvKsWhBIw72qqg" alt="BMW M5" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">BMW M5 Competition</h3>
+                        <div class="product-meta">
+                            <span class="product-meta-item"><i class="fas fa-calendar-alt"></i> 2021</span>
+                            <span class="product-meta-item"><i class="fas fa-tachometer-alt"></i> 12.500 km</span>
+                            <span class="product-meta-item"><i class="fas fa-gas-pump"></i> Gasolina</span>
+                        </div>
+                        <div class="product-price">R$ 689.900 <small>à vista</small></div>
+                        <div class="product-actions">
+                            <a href="compra.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Comprar</a>
+                            <a href="#" class="btn btn-outline"><i class="fas fa-info-circle"></i> Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Veículo 3 -->
+                <div class="product-card">
+                    <span class="product-badge">Novo</span>
+                    <img src="https://img.olx.com.br/images/85/852565129614574.webp" alt="Mercedes CLA" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Mercedes-AMG CLA 45</h3>
+                        <div class="product-meta">
+                            <span class="product-meta-item"><i class="fas fa-calendar-alt"></i> 2023</span>
+                            <span class="product-meta-item"><i class="fas fa-tachometer-alt"></i> 0 km</span>
+                            <span class="product-meta-item"><i class="fas fa-gas-pump"></i> Gasolina</span>
+                        </div>
+                        <div class="product-price">R$ 459.900 <small>à vista</small></div>
+                        <div class="product-actions">
+                            <a href="compra.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Comprar</a>
+                            <a href="#" class="btn btn-outline"><i class="fas fa-info-circle"></i> Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Veículo 4 -->
+                <div class="product-card">
+                    <span class="product-badge">Oferta</span>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-52esUTJVPOI0JGCNX15LZSw1dKNskkEr-g&s" alt="Porsche 911" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Porsche 911 Carrera S</h3>
+                        <div class="product-meta">
+                            <span class="product-meta-item"><i class="fas fa-calendar-alt"></i> 2022</span>
+                            <span class="product-meta-item"><i class="fas fa-tachometer-alt"></i> 8.200 km</span>
+                            <span class="product-meta-item"><i class="fas fa-gas-pump"></i> Gasolina</span>
+                        </div>
+                        <div class="product-price">R$ 799.900 <small>à vista</small></div>
+                        <div class="product-actions">
+                            <a href="produtos.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Comprar</a>
+                            <a href="#" class="btn btn-outline"><i class="fas fa-info-circle"></i> Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Veículo 5 -->
+                <div class="product-card">
+                    <span class="product-badge">Novo</span>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9aCCXrFyA6fydBblb8ts3v8dkDwGSBNRPOQ&s" alt="Lamborghini Huracán" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Lamborghini Huracán</h3>
+                        <div class="product-meta">
+                            <span class="product-meta-item"><i class="fas fa-calendar-alt"></i> 2023</span>
+                            <span class="product-meta-item"><i class="fas fa-tachometer-alt"></i> 0 km</span>
+                            <span class="product-meta-item"><i class="fas fa-gas-pump"></i> Gasolina</span>
+                        </div>
+                        <div class="product-price">R$ 3.299.900 <small>à vista</small></div>
+                        <div class="product-actions">
+                            <a href="#" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Comprar</a>
+                            <a href="#" class="btn btn-outline"><i class="fas fa-info-circle"></i> Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Veículo 6 -->
+                <div class="product-card">
+                    <span class="product-badge">Seminovo</span>
+                    <img src="https://cdn.motor1.com/images/mgl/XBGvq9/s1/range-rover-velar-2024-br.webp" alt="Range Rover Velar" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Range Rover Velar</h3>
+                        <div class="product-meta">
+                            <span class="product-meta-item"><i class="fas fa-calendar-alt"></i> 2020</span>
+                            <span class="product-meta-item"><i class="fas fa-tachometer-alt"></i> 32.500 km</span>
+                            <span class="product-meta-item"><i class="fas fa-gas-pump"></i> Diesel</span>
+                        </div>
+                        <div class="product-price">R$ 389.900 <small>à vista</small></div>
+                        <div class="product-actions">
+                            <a href="#" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Comprar</a>
+                            <a href="#" class="btn btn-outline"><i class="fas fa-info-circle"></i> Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paginação -->
+            <div class="pagination">
+                <a href="#" class="pagination-link"><i class="fas fa-angle-left"></i></a>
+                <a href="#" class="pagination-link active">1</a>
+                <a href="#" class="pagination-link">2</a>
+                <a href="#" class="pagination-link">3</a>
+                <a href="#" class="pagination-link">4</a>
+                <a href="#" class="pagination-link"><i class="fas fa-angle-right"></i></a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="quemsomos.html"><i class="fas fa-info-circle"></i> Sobre Nós</a>
+                <a href="seguro.html"><i class="fas fa-shield-alt"></i> Segurança</a>
+                <a href="duvidasfrequentes.html"><i class="fas fa-question-circle"></i> Dúvidas</a>
+                <a href="contato.html"><i class="fas fa-phone"></i> Contato</a>
+            </div>
+            <p class="copyright">© 2023 AutoMega - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Efeito hover nos cards de produto
+        const productCards = document.querySelectorAll('.product-card');
+        productCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+                this.style.boxShadow = '0 15px 35px rgba(231, 76, 60, 0.2)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 5px 25px rgba(44, 62, 80, 0.5)';
+            });
+        });
+    </script>
+</body>
+</html>

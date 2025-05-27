@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Pedidos - Auto Mega</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --dark-color: #1a1a1a;
+            --light-color: #000000;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .user-header {
+            background-color: var(--dark-color);
+            color: rgb(255, 0, 0);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-status {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .status-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .status-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .status-step.active .status-dot {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-color);
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            background-color: white;
+        }
+
+        .status-line {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background-color: var(--gray-color);
+            z-index: -1;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .installments-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .installments-table th,
+        .installments-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .installments-table thead {
+            background-color: var(--dark-color);
+            color: white;
+        }
+
+        .installments-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .status-paid {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+        }
+
+        .print-section {
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .status-timeline {
+                flex-wrap: wrap;
+            }
+
+            .status-step {
+                flex: 0 0 33%;
+                margin-bottom: 1rem;
+            }
+
+            .installments-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media print {
+            .user-header, .btn {
+                display: none;
+            }
+
+            .order-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="user-header">
+            <div class="user-info">
+                <div>
+                    <h1>Olá, João Silva</h1>
+                    <p>CPF: 123.456.789-00</p>
+                </div>
+                <a href="#" class="btn btn-primary">Voltar ao Portal</a>
+            </div>
+            <div class="order-status">
+                <h2>Status do Pedido: <span class="status-paid">Aprovado</span></h2>
+                <div class="status-timeline">
+                    <div class="status-step active">
+                        <div class="status-dot"></div>
+                        <div>Pedido Recebido</div>
+                        <div class="status-line"></div>
+                    </div>
+                    <div class="status-step active">
+                        <div class="status-dot"></div>
+                        <div>Análise Financeira</div>
+                        <div class="status-line"></div>
+                    </div>
+                    <div class="status-step">
+                        <div class="status-dot"></div>
+                        <div>Pagamento</div>
+                        <div class="status-line"></div>
+                    </div>
+                    <div class="status-step">
+                        <div class="status-dot"></div>
+                        <div>Entrega</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="print-section">
+            <button class="btn btn-primary" onclick="window.print()">Imprimir Relatório</button>
+        </div>
+
+        <div class="order-details">
+            <div class="order-card">
+                <h3>Detalhes do Veículo</h3>
+                <p><strong>Modelo:</strong> SUV Mega 2024</p>
+                <p><strong>Marca:</strong> Auto Mega</p>
+                <p><strong>Cor:</strong> Vermelho</p>
+                <p><strong>Chassi:</strong> 9BWZZZ377VT004251</p>
+            </div>
+
+            <div class="order-card">
+                <h3>Informações de Pagamento</h3>
+                <p><strong>Valor Total:</strong> R$ 120.000,00</p>
+                <p><strong>Entrada:</strong> R$ 24.000,00</p>
+                <p><strong>Forma de Pagamento:</strong> Financiamento</p>
+                <p><strong>Parcelas:</strong> 60x R$ 2.333,33</p>
+            </div>
+        </div>
+
+        <h2>Histórico de Parcelas</h2>
+        <table class="installments-table">
+            <thead>
+                <tr>
+                    <th>Parcela</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Pagamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01/60</td>
+                    <td>10/01/2024</td>
+                    <td>R$ 2.333,33</td>
+                    <td><span class="status-paid">Pago</span></td>
+                    <td>05/01/2024</td>
+                </tr>
+                <tr>
+                    <td>02/60</td>
+                    <td>10/02/2024</td>
+                    <td>R$ 2.333,33</td>
+                    <td><span class="status-paid">Pago</span></td>
+                    <td>08/02/2024</td>
+                </tr>
+                <tr>
+                    <td>03/60</td>
+                    <td>10/03/2024</td>
+                    <td>R$ 2.333,33</td>
+                    <td><span class="status-pending">Pendente</span></td>
+                    <td>-</td>
+                </tr>
+                <!-- Mais parcelas podem ser adicionadas aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para simular dados dinâmicos
+        function loadPaymentHistory() {
+            // Aqui você pode adicionar uma chamada AJAX para buscar os dados reais
+        }
+
+        window.onload = loadPaymentHistory;
+    </script>
+</body>
+</html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anunciar Veículo - AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f171e;
+            color: #fff;
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* Efeito 3D com partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotateX(360deg) rotateY(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, rgba(15, 23, 30, 0.9), rgba(44, 62, 80, 0.9));
+            backdrop-filter: blur(8px);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+            margin-left: 10px;
+        }
+
+        .logo-icon {
+            color: #e74c3c;
+            font-size: 32px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: #e74c3c;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #e74c3c;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-actions a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .user-actions a:hover {
+            color: #e74c3c;
+        }
+
+        .login-btn {
+            padding: 10px 20px;
+            border: 1px solid #e74c3c;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #e74c3c;
+            color: #fff !important;
+        }
+
+        /* Hero Anúncio */
+        .announce-hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to right, rgba(15, 23, 30, 0.9), rgba(44, 62, 80, 0.7)), 
+                        url('https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1480&q=80') center/cover no-repeat;
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .announce-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .announce-hero h1 span {
+            color: #e74c3c;
+        }
+
+        .announce-hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #bdc3c7;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Formulário de Anúncio */
+        .announce-form {
+            padding: 80px 5%;
+            background-color: #0f171e;
+        }
+
+        .form-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(44, 62, 80, 0.5);
+            border-radius: 10px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: #e74c3c;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #ecf0f1;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #e74c3c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(231, 76, 60, 0.2);
+            border: 2px dashed rgba(231, 76, 60, 0.5);
+            border-radius: 5px;
+            color: #e74c3c;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-btn:hover {
+            background-color: rgba(231, 76, 60, 0.3);
+            border-color: rgba(231, 76, 60, 0.7);
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .preview-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preview-image {
+            height: 100px;
+            border-radius: 5px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-submit {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            padding: 15px 40px;
+            background: linear-gradient(to right, #e74c3c, #2c3e50);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Benefícios */
+        .benefits-section {
+            padding: 80px 5%;
+            background: linear-gradient(to bottom, #0f171e, #1a252f);
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .benefit-card {
+            background-color: rgba(44, 62, 80, 0.5);
+            border-radius: 10px;
+            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .benefit-icon {
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .benefit-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .benefit-description {
+            color: #bdc3c7;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to right, #1a252f, #2c3e50);
+            padding: 50px 5% 20px;
+            border-top: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #e74c3c;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #e74c3c;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: #e74c3c;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            nav ul {
+                margin: 20px 0;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0 15px 10px;
+            }
+
+            .user-actions {
+                margin-top: 15px;
+            }
+
+            .announce-hero h1 {
+                font-size: 36px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .form-submit {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efeito de partículas 3D -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-car logo-icon"></i>
+            <h1>AutoMega</h1>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="telai.html">Início</a></li>
+                <li><a href="produtos.html">Veículos</a></li>
+                <li><a href="anuncia.html" class="active">Anunciar</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+        
+        <div class="user-actions">
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+    </header>
+    
+    <!-- Hero Anúncio -->
+    <section class="announce-hero">
+        <div>
+            <h1>Anuncie seu veículo na <span>maior plataforma</span> do Brasil</h1>
+            <p>Venda seu carro de forma rápida, segura e com o melhor preço. Conectamos você a milhares de compradores qualificados.</p>
+        </div>
+    </section>
+    
+    <!-- Formulário de Anúncio -->
+    <section class="announce-form">
+        <div class="form-container">
+            <h2 class="form-title">Informações do Veículo</h2>
+            
+            <form class="form-grid">
+                <!-- Informações Básicas -->
+                <div class="form-group">
+                    <label for="marca">Marca</label>
+                    <select id="marca" required>
+                        <option value="" disabled selected>Selecione a marca</option>
+                        <option value="audi">Audi</option>
+                        <option value="bmw">BMW</option>
+                        <option value="fiat">Fiat</option>
+                        <option value="ford">Ford</option>
+                        <option value="honda">Honda</option>
+                        <option value="hyundai">Hyundai</option>
+                        <option value="jeep">Jeep</option>
+                        <option value="mercedes">Mercedes-Benz</option>
+                        <option value="toyota">Toyota</option>
+                        <option value="volkswagen">Volkswagen</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modelo">Modelo</label>
+                    <input type="text" id="modelo" placeholder="Ex: Onix LTZ 1.0 Turbo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ano">Ano</label>
+                    <input type="number" id="ano" min="1950" max="2023" placeholder="Ex: 2020" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="km">Quilometragem</label>
+                    <input type="number" id="km" placeholder="Ex: 45000" required>
+                </div>
+                
+                <!-- Detalhes do Veículo -->
+                <div class="form-group">
+                    <label for="cambio">Câmbio</label>
+                    <select id="cambio" required>
+                        <option value="" disabled selected>Selecione</option>
+                        <option value="automatico">Automático</option>
+                        <option value="manual">Manual</option>
+                        <option value="semiautomatico">Semi-automático</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="combustivel">Combustível</label>
+                    <select id="combustivel" required>
+                        <option value="" disabled selected>Selecione</option>
+                        <option value="gasolina">Gasolina</option>
+                        <option value="etanol">Etanol</option>
+                        <option value="flex">Flex</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="hibrido">Híbrido</option>
+                        <option value="eletrico">Elétrico</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cor">Cor</label>
+                    <input type="text" id="cor" placeholder="Ex: Prata" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="portas">Nº de Portas</label>
+                    <select id="portas" required>
+                        <option value="" disabled selected>Selecione</option>
+                        <option value="2">2 portas</option>
+                        <option value="3">3 portas</option>
+                        <option value="4">4 portas</option>
+                        <option value="5">5 portas</option>
+                    </select>
+                </div>
+                
+                <!-- Preço e Descrição -->
+                <div class="form-group">
+                    <label for="preco">Preço (R$)</label>
+                    <input type="number" id="preco" placeholder="Ex: 75000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone para Contato</label>
+                    <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="descricao">Descrição do Veículo</label>
+                    <textarea id="descricao" placeholder="Descreva seu veículo com detalhes (opcional, motor, acessórios, histórico, etc.)"></textarea>
+                </div>
+                
+                <!-- Fotos -->
+                <div class="form-group full-width">
+                    <label>Fotos do Veículo (Máx. 10)</label>
+                    <div class="file-upload">
+                        <label class="file-upload-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> Clique para enviar fotos
+                            <input type="file" id="fotos" accept="image/*" multiple style="display: none;">
+                        </label>
+                    </div>
+                    <div class="preview-images" id="preview-container"></div>
+                </div>
+                
+                <!-- Termos e Envio -->
+                <div class="form-group full-width">
+                    <input type="checkbox" id="termos" required>
+                    <label for="termos">Li e aceito os <a href="termos.html" target="_blank">Termos de Uso</a> e <a href="privacidade.html" target="_blank">Política de Privacidade</a></label>
+                </div>
+                
+                <div class="form-submit">
+                    <button type="submit" class="submit-btn">Anunciar Veículo</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    
+    <!-- Benefícios -->
+    <section class="benefits-section">
+        <div class="section-container">
+            <h2 class="section-title">Por que anunciar na AutoMega?</h2>
+            <p class="section-text">Conheça as vantagens de anunciar seu veículo em nossa plataforma</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <i class="fas fa-bolt benefit-icon"></i>
+                    <h3 class="benefit-title">Venda Rápida</h3>
+                    <p class="benefit-description">Nossos veículos vendem em média 30% mais rápido que no mercado convencional.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-shield-alt benefit-icon"></i>
+                    <h3 class="benefit-title">Segurança Garantida</h3>
+                    <p class="benefit-description">Processo seguro com verificação de documentos e histórico do veículo.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-chart-line benefit-icon"></i>
+                    <h3 class="benefit-title">Melhor Preço</h3>
+                    <p class="benefit-description">Avaliação profissional para ajudar você a definir o preço ideal.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-users benefit-icon"></i>
+                    <h3 class="benefit-title">Milhares de Compradores</h3>
+                    <p class="benefit-description">Seu anúncio será visto por mais de 1 milhão de potenciais compradores.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-camera benefit-icon"></i>
+                    <h3 class="benefit-title">Fotos Profissionais</h3>
+                    <p class="benefit-description">Oferecemos serviço de fotografia profissional para destacar seu veículo.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <i class="fas fa-headset benefit-icon"></i>
+                    <h3 class="benefit-title">Suporte Dedicado</h3>
+                    <p class="benefit-description">Equipe especializada para te auxiliar em todas as etapas do processo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Sobre a AutoMega</h3>
+                <ul>
+                    <li><a href="sobre.html">Quem somos</a></li>
+                    <li><a href="nossah.html">Nossa história</a></li>
+                    <li><a href="trabalheconosco.html">Trabalhe conosco</a></li>
+                    <li><a href="termos.html">Termos de uso</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Para Compradores</h3>
+                <ul>
+                    <li><a href="comocomprar.html">Como comprar</a></li>
+                    <li><a href="teste.html">Financiamento</a></li>
+                    <li><a href="seguro.html">Seguro auto</a></li>
+                    <li><a href="duvidasfrequentes.html">Dúvidas frequentes</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Para Vendedores</h3>
+                <ul>
+                    <li><a href="anuncia.html">Anuncie seu veículo</a></li>
+                    <li><a href="planoepreco.html">Planos e preços</a></li>
+                    <li><a href="dicas.html">Dicas para vender</a></li>
+                    <li><a href="consultores.html">Consultores</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contato</h3>
+                <ul>
+                    <li><a href="contato.html">Central de atendimento</a></li>
+                    <li><a href="loja.html">Lojas físicas</a></li>
+                    <li><a href="sac.html">SAC</a></li>
+                    <li><a href="omprensa.html">Imprensa</a></li>
+                </ul>
+                
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 AutoMega - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Adicione o Font Awesome para os ícones -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- Script para as partículas 3D -->
+    <script>
+        // Cria partículas 3D
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Posição aleatória
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Tamanho aleatório
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Opacidade aleatória
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            // Atraso de animação aleatório
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Preview de imagens
+        document.getElementById('fotos').addEventListener('change', function(e) {
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = '';
+            
+            const files = e.target.files;
+            const maxFiles = Math.min(files.length, 10); // Limite de 10 imagens
+            
+            for (let i = 0; i < maxFiles; i++) {
+                const file = files[i];
+                if (file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.classList.add('preview-image');
+                        previewContainer.appendChild(img);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Máscara para telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 0) {
+                value = `(${value.substring(0, 2)}`;
+            }
+            if (value.length > 3) {
+                value = `${value}) ${value.substring(3, 8)}`;
+            }
+            if (value.length > 10) {
+                value = `${value.substring(0, 10)}-${value.substring(10, 15)}`;
+            }
+            
+            e.target.value = value.substring(0, 15);
+        });
+    </script>
+</body>
+</html>

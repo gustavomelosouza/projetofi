@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofertas por Categoria - AutoMega</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        body { 
+            background-color: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            perspective: 1000px; 
+        }
+        
+        /* Efeito de partículas */
+        .particles { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -1; 
+        }
+        
+        .particle { 
+            position: absolute; 
+            background-color: rgba(231, 76, 60, 0.5); 
+            border-radius: 50%; 
+            animation: floatParticle 15s infinite linear; 
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translateY(0) rotateX(0) rotateY(0); }
+            50% { transform: translateY(-100px) rotateX(180deg) rotateY(180deg); }
+            100% { transform: translateY(0) rotateX(360deg) rotateY(360deg); }
+        }
+        
+        /* Container principal */
+        .categories-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: rgba(15, 23, 30, 0.85);
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(44, 62, 80, 0.5);
+            padding: 40px;
+            margin: 40px 20px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #e74c3c;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        .logo p {
+            color: #ecf0f1;
+            font-size: 1.1rem;
+        }
+        
+        /* Navegação por abas */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #ecf0f1;
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 600;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab-btn:hover {
+            color: #e74c3c;
+        }
+        
+        .tab-btn.active {
+            color: #e74c3c;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #e74c3c;
+        }
+        
+        /* Conteúdo das abas */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Ofertas */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .offer-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.2);
+        }
+        
+        .offer-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+        
+        .offer-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .offer-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .offer-card:hover .offer-image img {
+            transform: scale(1.1);
+        }
+        
+        .offer-content {
+            padding: 20px;
+        }
+        
+        .offer-title {
+            color: #ecf0f1;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .offer-description {
+            color: #bdc3c7;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .offer-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .offer-price .old-price {
+            color: #bdc3c7;
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+        
+        .offer-price .new-price {
+            color: #e74c3c;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .offer-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+            font-size: 0.8rem;
+        }
+        
+        .offer-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .offer-button {
+            display: block;
+            width: 100%;
+            background: #e74c3c;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .offer-button:hover {
+            background: #c0392b;
+        }
+        
+        /* Destaque por categoria */
+        .category-highlight {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(15, 23, 30, 0.9));
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .category-highlight .offer-image {
+            flex: 1;
+            min-width: 250px;
+            height: auto;
+        }
+        
+        .category-highlight .offer-content {
+            flex: 2;
+        }
+        
+        .category-highlight .offer-title {
+            font-size: 1.5rem;
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .categories-container {
+                padding: 20px;
+            }
+            
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-highlight {
+                flex-direction: column;
+            }
+            
+            .category-highlight .offer-image {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efeito de partículas 3D -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Container principal -->
+    <div class="categories-container">
+        <div class="logo">
+            <h1>Ofertas por Categoria</h1>
+            <p>Encontre o veículo perfeito para suas necessidades</p>
+        </div>
+        
+        <!-- Navegação por abas -->
+        <div class="category-tabs">
+            <button class="tab-btn active" data-tab="sedan">Sedãs</button>
+            <button class="tab-btn" data-tab="suv">SUVs</button>
+            <button class="tab-btn" data-tab="hatch">Hatchs</button>
+            <button class="tab-btn" data-tab="moto">Motos</button>
+        </div>
+        
+        <!-- Conteúdo das abas -->
+        
+        <!-- Aba Sedãs -->
+        <div class="tab-content active" id="sedan">
+            <div class="offers-grid">
+                <!-- Destaque da categoria -->
+                <div class="offer-card category-highlight">
+                    <div class="offer-image">
+                        <img src="https://uploads.vrum.com.br/2022/07/Honda-Civic-Touring-1.5-turbo-2017-frente-cinza-escuro-seda-medio.jpg" alt="Mega-Sedan Elite">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Lançamento</span>
+                        <h3 class="offer-title">Honda civic G10</h3>
+                        <p class="offer-description">O sedã mais sofisticado da AutoMega agora com tecnologia híbrida e interior em couro premium. Conforto e performance em um único veículo.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 119.990</span>
+                            <span class="new-price">Por R$ 110.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 18km/L (urbano)</span>
+                            <span><i class="fas fa-tachometer-alt"></i> 250cv</span>
+                            <span><i class="fas fa-cogs"></i> Automático 8 marchas</span>
+                            <span><i class="fas fa-car"></i> Híbrido Flex</span>
+                        </div>
+                        <a href="#" class="offer-button">RESERVAR AGORA</a>
+                    </div>
+                </div>
+                
+                <!-- Outros sedãs -->
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVULbnaDMrc09xmKbrcyvCUX1bYHDXmc-24A&s" alt="Mega-Sedan Executive">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">-12%</span>
+                        <h3 class="offer-title">Toyota corola xr</h3>
+                        <p class="offer-description">Versão executiva com pacote de conectividade completo e assistentes de direção.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 179.990</span>
+                            <span class="new-price">Por R$ 158.390</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 14km/L</span>
+                            <span><i class="fas fa-tachometer-alt"></i> 200cv</span>
+                            <span><i class="fas fa-cogs"></i> Automático</span>
+                        </div>
+                        <a href="#" class="offer-button">VER OFERTA</a>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://image1.mobiauto.com.br/images/api/images/v1.0/221273857/transform/fl_progressive,f_webp,q_80" alt="Mega-Sedan Sport">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">-15%</span>
+                        <h3 class="offer-title">Audi A3</h3>
+                        <p class="offer-description">Performance esportiva com conforto premium. Rodas aro 19 e acabamento esportivo.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 159.990</span>
+                            <span class="new-price">Por R$ 135.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 12km/L</span>
+                            <span><i class="fas fa-tachometer-alt"></i> 250cv</span>
+                            <span><i class="fas fa-cogs"></i> Automático</span>
+                        </div>
+                        <a href="#" class="offer-button">COMPRAR AGORA</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aba SUVs -->
+        <div class="tab-content" id="suv">
+            <div class="offers-grid">
+                <!-- Destaque da categoria -->
+                <div class="offer-card category-highlight">
+                    <div class="offer-image">
+                        <img src="https://cdn.autopapo.com.br/box/uploads/2024/07/18141917/cadillac-escalade-2025-1.png" alt="Mega-SUV Premium">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Oferta Especial</span>
+                        <h3 class="offer-title">Cadilac 2025</h3>
+                        <p class="offer-description">O SUV mais completo da AutoMega com tração 4x4 permanente, 7 lugares e pacote de segurança avançado.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 1.289.990</span>
+                            <span class="new-price">Por R$ 1.259.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 10km/L</span>
+                            <span><i class="fas fa-users"></i> 7 lugares</span>
+                            <span><i class="fas fa-car"></i> 4x4 Permanente</span>
+                            <span><i class="fas fa-shield-alt"></i> 5 estrelas segurança</span>
+                        </div>
+                        <a href="#" class="offer-button">TEST DRIVE</a>
+                    </div>
+                </div>
+                
+                <!-- Outros SUVs -->
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://blog.toyotasulpar.com.br/wp-content/uploads/2022/06/toyota-corolla-cross-passeio-witmarssum-lecker-confeitaria-sulpar.jpg" alt="Mega-SUV Urban">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">-10%</span>
+                        <h3 class="offer-title">Corola Cross</h3>
+                        <p class="offer-description">SUV compacto perfeito para cidade com tecnologia de estacionamento assistido.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 139.990</span>
+                            <span class="new-price">Por R$ 125.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 14km/L</span>
+                            <span><i class="fas fa-users"></i> 5 lugares</span>
+                            <span><i class="fas fa-car"></i> 4x2</span>
+                        </div>
+                        <a href="#" class="offer-button">VER DETALHES</a>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIQUtn9gqe1eGeGf4xSvJwNZRwn4fmRIa9UA&s" alt="Mega-SUV Adventure">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Financiamento</span>
+                        <h3 class="offer-title">Troler 2020</h3>
+                        <p class="offer-description">Preparado para qualquer terreno com suspensão elevada e proteções de motor.</p>
+                        <div class="offer-price">
+                            <span class="old-price">À vista R$ 199.990</span>
+                            <span class="new-price">2.999/mês</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 9km/L</span>
+                            <span><i class="fas fa-car"></i> 4x4</span>
+                            <span><i class="fas fa-road"></i> Off-road</span>
+                        </div>
+                        <a href="#" class="offer-button">SIMULAR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aba Hatchs -->
+        <div class="tab-content" id="hatch">
+            <div class="offers-grid">
+                <!-- Destaque da categoria -->
+                <div class="offer-card category-highlight">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1525&q=80" alt="Mega-Hatch GT">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">-18%</span>
+                        <h3 class="offer-title">Mega-Hatch GT Turbo</h3>
+                        <p class="offer-description">Hatch esportivo com motor turbo de 180cv e câmbio automatizado de 6 marchas.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 99.990</span>
+                            <span class="new-price">Por R$ 81.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 15km/L</span>
+                            <span><i class="fas fa-tachometer-alt"></i> 180cv</span>
+                            <span><i class="fas fa-cogs"></i> Automatizado</span>
+                            <span><i class="fas fa-bolt"></i> Turbo</span>
+                        </div>
+                        <a href="#" class="offer-button">COMPRAR</a>
+                    </div>
+                </div>
+                
+                <!-- Outros hatchs -->
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1524&q=80" alt="Mega-Hatch City">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Economia</span>
+                        <h3 class="offer-title">Mega-Hatch City</h3>
+                        <p class="offer-description">O hatch mais econômico da categoria, ideal para o dia a dia na cidade.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 69.990</span>
+                            <span class="new-price">Por R$ 64.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-gas-pump"></i> 18km/L</span>
+                            <span><i class="fas fa-car"></i> 1.0 Flex</span>
+                            <span><i class="fas fa-cogs"></i> Manual 5v</span>
+                        </div>
+                        <a href="#" class="offer-button">OFERTA</a>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1583&q=80" alt="Mega-Hatch Electric">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Elétrico</span>
+                        <h3 class="offer-title">Mega-Hatch Electric</h3>
+                        <p class="offer-description">Primeiro hatch 100% elétrico da AutoMega com autonomia de 350km.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 149.990</span>
+                            <span class="new-price">Por R$ 139.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-bolt"></i> 350km</span>
+                            <span><i class="fas fa-charging-station"></i> Carregamento rápido</span>
+                            <span><i class="fas fa-car"></i> 0 emissões</span>
+                        </div>
+                        <a href="#" class="offer-button">SABER MAIS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aba Motos -->
+        <div class="tab-content" id="moto">
+            <div class="offers-grid">
+                <!-- Destaque da categoria -->
+                <div class="offer-card category-highlight">
+                    <div class="offer-image">
+                        <img src="https://i.redd.it/4y2sx077440d1.jpeg" alt="Mega-Bike 1000">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Top Line</span>
+                        <h3 class="offer-title">CBR 300</h3>
+                        <p class="offer-description">Moto basica para o dia a dia </p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 29.990</span>
+                            <span class="new-price">Por R$ 24.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-tachometer-alt"></i> 180cv</span>
+                            <span><i class="fas fa-gas-pump"></i> 18km/L</span>
+                            <span><i class="fas fa-bolt"></i> 0-100km em 3.2s</span>
+                            <span><i class="fas fa-shield-alt"></i> ABS + TC</span>
+                        </div>
+                        <a href="#" class="offer-button">COMPRAR</a>
+                    </div>
+                </div>
+                
+                <!-- Outras motos -->
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://i0.statig.com.br/bancodeimagens/c1/4h/er/c14her3hky9e5mfatk4psr2kf.jpg" alt="Mega-Bike Touring">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">Conforto</span>
+                        <h3 class="offer-title">Tiger 1200</h3>
+                        <p class="offer-description">Moto turismo com banco aquecido, GPS integrado e malas laterais.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 149.990</span>
+                            <span class="new-price">Por R$ 135.990</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-tachometer-alt"></i> 85cv</span>
+                            <span><i class="fas fa-gas-pump"></i> 22km/L</span>
+                            <span><i class="fas fa-road"></i> Tanque 25L</span>
+                        </div>
+                        <a href="#" class="offer-button">OFERTA</a>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://clickpetroleoegas.com.br/wp-content/uploads/2024/05/Kawasaki-Ninja-H2R-1.jpg" alt="Mega-Bike Urban">
+                    </div>
+                    <div class="offer-content">
+                        <span class="offer-badge">-15%</span>
+                        <h3 class="offer-title">Kawasaki Ninja-H2R</h3>
+                        <p class="offer-description">Moto urbana econômica e ágil, perfeita para o dia a dia.</p>
+                        <div class="offer-price">
+                            <span class="old-price">De R$ 350.000</span>
+                            <span class="new-price">Por R$ 300.000</span>
+                        </div>
+                        <div class="offer-details">
+                            <span><i class="fas fa-tachometer-alt"></i> 30cv</span>
+                            <span><i class="fas fa-gas-pump"></i> 35km/L</span>
+                            <span><i class="fas fa-bicycle"></i> 169kg</span>
+                        </div>
+                        <a href="#" class="offer-button">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Efeito de partículas
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Navegação por abas
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove a classe active de todos os botões e conteúdos
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Adiciona a classe active ao botão clicado
+                btn.classList.add('active');
+                
+                // Mostra o conteúdo correspondente
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

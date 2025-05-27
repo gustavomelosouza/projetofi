@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalhe Conosco | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            color: #ecf0f1;
+            perspective: 1000px;
+        }
+
+        /* Efeito de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-1000px) rotateX(360deg); opacity: 0; }
+        }
+
+        /* Efeito neon */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7)); }
+            100% { opacity: 0.1; filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5)); }
+        }
+
+        /* Header */
+        .site-header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 15px 0;
+            border-bottom: 1px solid #e74c3c;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Conteúdo Principal */
+        .careers-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e74c3c;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        /* Banner */
+        .careers-banner {
+            background: linear-gradient(rgba(15, 23, 30, 0.8), rgba(44, 62, 80, 0.5)), 
+                        url('https://images.unsplash.com/photo-1521791055366-0d553872125f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 60px;
+            border: 2px solid #e74c3c;
+        }
+
+        .banner-content h2 {
+            font-size: 42px;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .banner-content p {
+            font-size: 18px;
+            color: #ecf0f1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Vagas */
+        .jobs-section {
+            margin: 60px 0;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .job-card {
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+        }
+
+        .job-type {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            font-size: 22px;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .job-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+
+        .job-info i {
+            color: #e74c3c;
+            margin-right: 5px;
+        }
+
+        .job-description {
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .apply-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .apply-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Benefícios */
+        .benefits-section {
+            margin: 80px 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .benefit-card {
+            background: rgba(44, 62, 80, 0.3);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 3px solid #f39c12;
+            text-align: center;
+        }
+
+        .benefit-icon {
+            font-size: 40px;
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        /* Formulário */
+        .form-section {
+            background: rgba(44, 62, 80, 0.3);
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 60px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .form-title {
+            color: #e74c3c;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ecf0f1;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #ecf0f1;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #e74c3c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            padding: 12px 15px;
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px dashed #e74c3c;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .submit-button {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto 0;
+            font-weight: bold;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .careers-banner {
+                height: 300px;
+            }
+            
+            .banner-content h2 {
+                font-size: 32px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeitos de Fundo -->
+    <div class="particles" id="particles"></div>
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="site-logo">AutoMega</div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="careers-container">
+        <h1 class="section-title"><i class="fas fa-briefcase"></i> Trabalhe Conosco</h1>
+        
+        <!-- Banner -->
+        <div class="careers-banner">
+            <div class="banner-content">
+                <h2>Sua carreira acelera aqui</h2>
+                <p>Junte-se a uma das maiores redes de concessionárias do país e faça parte de um time apaixonado por automóveis e excelência no atendimento.</p>
+            </div>
+        </div>
+        
+        <!-- Vagas -->
+        <section class="jobs-section">
+            <h2 class="section-title"><i class="fas fa-search"></i> Vagas em Destaque</h2>
+            <div class="jobs-grid">
+                <!-- Vaga 1 -->
+                <div class="job-card">
+                    <span class="job-type">Tempo Integral</span>
+                    <h3 class="job-title">Consultor de Vendas</h3>
+                    <div class="job-info">
+                        <span><i class="fas fa-map-marker-alt"></i> São Paulo, SP</span>
+                        <span><i class="fas fa-money-bill-wave"></i> R$ 3.500 + comissão</span>
+                    </div>
+                    <div class="job-info">
+                        <span><i class="fas fa-clock"></i> 08:00 - 18:00</span>
+                        <span><i class="fas fa-user-tie"></i> 2+ anos de experiência</span>
+                    </div>
+                    <p class="job-description">Atendimento ao cliente, prospecção ativa, fechamento de negócios e acompanhamento pós-venda. Treinamento completo fornecido.</p>
+                    <a href="#form" class="apply-button">Candidate-se</a>
+                </div>
+                
+                <!-- Vaga 2 -->
+                <div class="job-card">
+                    <span class="job-type">Estágio</span>
+                    <h3 class="job-title">Assistente Financeiro</h3>
+                    <div class="job-info">
+                        <span><i class="fas fa-map-marker-alt"></i> Campinas, SP</span>
+                        <span><i class="fas fa-money-bill-wave"></i> R$ 1.800 + benefícios</span>
+                    </div>
+                    <div class="job-info">
+                        <span><i class="fas fa-clock"></i> 09:00 - 17:00</span>
+                        <span><i class="fas fa-graduation-cap"></i> Adm/Contábeis</span>
+                    </div>
+                    <p class="job-description">Auxiliar na análise de crédito, documentação de financiamentos e atendimento aos clientes no setor financeiro.</p>
+                    <a href="#form" class="apply-button">Candidate-se</a>
+                </div>
+                
+                <!-- Vaga 3 -->
+                <div class="job-card">
+                    <span class="job-type">Tempo Integral</span>
+                    <h3 class="job-title">Mecânico Especializado</h3>
+                    <div class="job-info">
+                        <span><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</span>
+                        <span><i class="fas fa-money-bill-wave"></i> R$ 4.200 + benefícios</span>
+                    </div>
+                    <div class="job-info">
+                        <span><i class="fas fa-clock"></i> 07:00 - 16:00</span>
+                        <span><i class="fas fa-certificate"></i> Certificação obrigatória</span>
+                    </div>
+                    <p class="job-description">Realizar diagnósticos, manutenção e reparos em veículos diversos, com foco em qualidade e segurança.</p>
+                    <a href="#form" class="apply-button">Candidate-se</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Benefícios -->
+        <section class="benefits-section">
+            <h2 class="section-title"><i class="fas fa-medal"></i> Benefícios</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-car"></i></div>
+                    <h3 class="benefit-title">Veículo Benefício</h3>
+                    <p>Utilização de veículos da frota para funções específicas</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h3 class="benefit-title">PLR Generoso</h3>
+                    <p>Participação nos lucros acima da média do mercado</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-heartbeat"></i></div>
+                    <h3 class="benefit-title">Plano de Saúde</h3>
+                    <p>Co-participação em plano topo de linha</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h3 class="benefit-title">Desenvolvimento</h3>
+                    <p>Programas de treinamento e capacitação contínua</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Formulário -->
+        <section class="form-section" id="form">
+            <h3 class="form-title"><i class="fas fa-file-alt"></i> Candidate-se Agora</h3>
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nome Completo *</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">E-mail *</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Telefone *</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="position" class="form-label">Vaga de Interesse *</label>
+                        <select id="position" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="venda">Consultor de Vendas</option>
+                            <option value="financeiro">Assistente Financeiro</option>
+                            <option value="mecanico">Mecânico Especializado</option>
+                            <option value="outra">Outra</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience" class="form-label">Conte-nos sobre sua experiência *</label>
+                    <textarea id="experience" class="form-control" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resume" class="form-label">Currículo (PDF ou DOC) *</label>
+                    <input type="file" id="resume" class="file-upload" accept=".pdf,.doc,.docx" required>
+                    <label for="resume" class="file-label"><i class="fas fa-upload"></i> Anexar Arquivo</label>
+                </div>
+                
+                <button type="submit" class="submit-button">Enviar Candidatura</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Efeito hover nos cards
+        document.querySelectorAll('.job-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = '0 10px 25px rgba(231, 76, 60, 0.3)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = 'none';
+            });
+        });
+
+        // Mostrar nome do arquivo selecionado
+        document.getElementById('resume').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Nenhum arquivo selecionado';
+            document.querySelector('.file-label').innerHTML = `<i class="fas fa-file"></i> ${fileName}`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAC - AutoMega</title>
+    <!-- Mesmo estilo do login (copiado do seu código) -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; perspective: 1000px; }
+        /* ... (mantenha todo o CSS do seu login aqui) ... */
+        
+        /* Novos estilos específicos para o SAC */
+        .sac-container {
+            width: 100%;
+            max-width: 800px; /* Mais largo para acomodar FAQ */
+            background-color: rgba(15, 23, 30, 0.85);
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(44, 62, 80, 0.5);
+            padding: 40px;
+            margin: 20px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: floatContainer 6s ease-in-out infinite;
+        }
+        
+        .sac-section {
+            margin-bottom: 30px;
+        }
+        
+        .sac-section h2 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        .contact-form .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .contact-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+        
+        .faq-question {
+            color: #000000;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 20px;
+        }
+        
+        .faq-answer {
+            color: #bdc3c7;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            margin-top: 10px;
+        }
+        
+        .faq-item.active .faq-question::after {
+            content: '-';
+        }
+        
+        .contact-channels {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .channel {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .channel h3 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .channel p, .channel a {
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+        
+        .channel a {
+            display: block;
+            margin-top: 5px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .channel a:hover {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Efeito de partículas 3D (mesmo do login) -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Efeito de carro em neón (mesmo do login) -->
+    <div class="neon-car"></div>
+    
+    <!-- Container do SAC -->
+    <div class="sac-container">
+        <div class="logo">
+            <h1>AutoMega SAC</h1>
+            <p>Serviço de Atendimento ao Consumidor</p>
+        </div>
+        
+        <!-- Seção de Contato -->
+        <section class="sac-section contact-form">
+            <h2>Fale Conosco</h2>
+            <form>
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" placeholder="Seu nome completo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Assunto</label>
+                    <select id="subject" required>
+                        <option value="">Selecione...</option>
+                        <option value="duvida">Dúvida</option>
+                        <option value="reclamacao">Reclamação</option>
+                        <option value="sugestao">Sugestão</option>
+                        <option value="elogio">Elogio</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Mensagem</label>
+                    <textarea id="message" placeholder="Descreva sua solicitação..." required></textarea>
+                </div>
+                
+                <button type="submit" class="login-button">Enviar Mensagem</button>
+            </form>
+        </section>
+        
+        <!-- Seção de Canais de Contato -->
+        <section class="sac-section">
+            <h2>Canais de Atendimento</h2>
+            <div class="contact-channels">
+                <div class="channel">
+                    <h3><i class="fas fa-phone-alt"></i> Telefone</h3>
+                    <p>Seg a Sex, das 8h às 18h</p>
+                    <a href="tel:+5511999999999">(11) 99999-9999</a>
+                </div>
+                
+                <div class="channel">
+                    <h3><i class="fab fa-whatsapp"></i> WhatsApp</h3>
+                    <p>Atendimento 24h</p>
+                    <a href="https://wa.me/5511999999999">Enviar mensagem</a>
+                </div>
+                
+                <div class="channel">
+                    <h3><i class="fas fa-envelope"></i> E-mail</h3>
+                    <p>Resposta em até 48h</p>
+                    <a href="mailto:sac@automega.com.br">sac@automega.com.br</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção de FAQ -->
+        <section class="sac-section">
+            <h2>Perguntas Frequentes</h2>
+            <div class="faq-item">
+                <div class="faq-question">Como faço para comprar um veículo?</div>
+                <div class="faq-answer">
+                    <p>Navegue pelo nosso catálogo, escolha o veículo desejado e clique em "Comprar". Nosso time entrará em contato para finalizar o processo.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Qual o prazo de entrega?</div>
+                <div class="faq-answer">
+                    <p>O prazo varia de acordo com o veículo e localização. Em média, de 5 a 10 dias úteis após a confirmação do pagamento.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Aceitam troca de veículos?</div>
+                <div class="faq-answer">
+                    <p>Sim! Avaliamos seu veículo atual e descontamos o valor na compra do novo. Agende uma avaliação conosco.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts (mesmos do login) -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // Partículas 3D (mesmo código do login)
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Interação do FAQ
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

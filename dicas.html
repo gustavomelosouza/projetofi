@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicas para Vender | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            color: #ecf0f1;
+            perspective: 1000px;
+        }
+
+        /* Efeito de partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-1000px) rotateX(360deg); opacity: 0; }
+        }
+
+        /* Efeito neon */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.05; filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7)); }
+            100% { opacity: 0.1; filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5)); }
+        }
+
+        /* Header */
+        .site-header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 15px 0;
+            border-bottom: 1px solid #e74c3c;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Conteúdo Principal */
+        .tips-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e74c3c;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        /* Cards de Dicas */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .tip-card {
+            background: rgba(44, 62, 80, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+        }
+
+        .tip-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .tip-title {
+            font-size: 20px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-content {
+            color: #bdc3c7;
+            line-height: 1.6;
+        }
+
+        .tip-content ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .tip-content li {
+            margin-bottom: 8px;
+        }
+
+        /* Destaque */
+        .highlight-box {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px dashed #e74c3c;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .highlight-title {
+            color: #f39c12;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeitos de Fundo -->
+    <div class="particles" id="particles"></div>
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="site-logo">AutoMega</div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="tips-container">
+        <h1 class="section-title"><i class="fas fa-lightbulb"></i> Dicas para Vender Mais</h1>
+        
+        <div class="tips-grid">
+            <!-- Dica 1 -->
+            <div class="tip-card">
+                <div class="tip-number">1</div>
+                <h2 class="tip-title"><i class="fas fa-user-tie"></i> Conheça Seu Cliente</h2>
+                <div class="tip-content">
+                    <p>Antes de apresentar qualquer veículo, entenda profundamente as necessidades do cliente:</p>
+                    <ul>
+                        <li>Qual o perfil de uso (urbano, estrada, família)?</li>
+                        <li>Quais features são prioritárias (consumo, segurança, espaço)?</li>
+                        <li>Qual faixa de preço e forma de pagamento ideal?</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Dica 2 -->
+            <div class="tip-card">
+                <div class="tip-number">2</div>
+                <h2 class="tip-title"><i class="fas fa-car"></i> Destaque Benefícios</h2>
+                <div class="tip-content">
+                    <p>Não venda características, venda soluções e benefícios emocionais:</p>
+                    <ul>
+                        <li>"Este SUV tem 7 lugares" → "Sua família toda viajará confortavelmente"</li>
+                        <li>"Airbag 6 pontos" → "Proteção máxima para quem você ama"</li>
+                        <li>"Computador de bordo" → "Controle preciso do seu consumo"</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Dica 3 -->
+            <div class="tip-card">
+                <div class="tip-number">3</div>
+                <h2 class="tip-title"><i class="fas fa-handshake"></i> Técnicas de Negociação</h2>
+                <div class="tip-content">
+                    <p>Domine estas estratégias comprovadas:</p>
+                    <ul>
+                        <li><strong>Método BATNA</strong>: Tenha sempre alternativas preparadas</li>
+                        <li><strong>Ancoragem</strong>: Mostre primeiro opções premium</li>
+                        <li><strong>Urgência</strong>: "Esta oferta especial vale até..."</li>
+                        <li><strong>Escuta ativa</strong>: Repita preocupações do cliente para validá-las</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Dica 4 -->
+            <div class="tip-card">
+                <div class="tip-number">4</div>
+                <h2 class="tip-title"><i class="fas fa-chart-line"></i> Pós-Venda que Fideliza</h2>
+                <div class="tip-content">
+                    <p>Clientes satisfeitos trazem 3x mais negócios:</p>
+                    <ul>
+                        <li>Ligue após 3 dias da entrega para verificar satisfação</li>
+                        <li>Ofereça revisão grátis nos primeiros 6 meses</li>
+                        <li>Envie mensagens personalizadas (aniversário, datas especiais)</li>
+                        <li>Crie um programa de indicação com benefícios</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Dica 5 -->
+            <div class="tip-card">
+                <div class="tip-number">5</div>
+                <h2 class="tip-title"><i class="fas fa-mobile-alt"></i> Vendas Digitais</h2>
+                <div class="tip-content">
+                    <p>Otimize seu processo online:</p>
+                    <ul>
+                        <li>Fotos profissionais em 360° do veículo</li>
+                        <li>Vídeos curtos destacando features especiais</li>
+                        <li>Chatbot no site para qualificar leads 24/7</li>
+                        <li>Test-drive virtual com chamada de vídeo</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Dica 6 -->
+            <div class="tip-card">
+                <div class="tip-number">6</div>
+                <h2 class="tip-title"><i class="fas fa-percentage"></i> Lidando com Objeções</h2>
+                <div class="tip-content">
+                    <p>Transforme objeções em oportunidades:</p>
+                    <ul>
+                        <li><strong>"Está caro"</strong>: Mostre o custo-benefício (valor residual, garantia)</li>
+                        <li><strong>"Preciso pensar"</strong>: Descubra a verdadeira preocupação</li>
+                        <li><strong>"Outra concessionária..."</strong>: Destaque diferenciais exclusivos</li>
+                        <li>Sempre use: "Eu entendo... e quanto se..." para redirecionar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Destaque Final -->
+        <div class="highlight-box">
+            <h3 class="highlight-title"><i class="fas fa-gem"></i> Dica Bônus</h3>
+            <p style="color: #ecf0f1; margin-bottom: 15px;">Use histórias de sucesso de outros clientes como prova social. Crie um catálogo com:</p>
+            <ul style="color: #bdc3c7; text-align: left; max-width: 600px; margin: 0 auto;">
+                <li>Depoimentos em vídeo</li>
+                <li>Fotos de entregas com clientes felizes</li>
+                <li>Cases de troca com economia demonstrada</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Efeito hover nos cards
+        document.querySelectorAll('.tip-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = '0 10px 25px rgba(231, 76, 60, 0.3)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            });
+        });
+    </script>
+</body>
+</html>

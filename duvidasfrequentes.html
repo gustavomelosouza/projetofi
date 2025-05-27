@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dúvidas Frequentes | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            perspective: 1000px;
+            color: #ecf0f1;
+        }
+
+        /* Efeito 3D com partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotateX(360deg) rotateY(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Efeito de neón para o fundo */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.05;
+                filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            }
+            100% {
+                opacity: 0.1;
+                filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5));
+            }
+        }
+
+        .site-header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 15px 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            border-bottom: 1px solid #e74c3c;
+        }
+
+        .site-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .site-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        .site-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .site-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #e74c3c;
+        }
+
+        .site-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .site-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #e74c3c;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: #ecf0f1;
+            font-size: 16px;
+            padding-left: 50px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #e74c3c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #e74c3c;
+        }
+
+        .faq-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .faq-item {
+            background-color: rgba(44, 62, 80, 0.3);
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.1);
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            background-color: rgba(15, 23, 30, 0.5);
+        }
+
+        .faq-question:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+
+        .faq-answer-inner {
+            padding: 0 0 20px 0;
+            line-height: 1.6;
+            color: #bdc3c7;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 20px 10px 20px;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s;
+            color: #e74c3c;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-category {
+            margin-top: 40px;
+        }
+
+        .category-title {
+            font-size: 22px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-card {
+            background-color: rgba(44, 62, 80, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 50px;
+            text-align: center;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .contact-title {
+            font-size: 24px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .contact-desc {
+            color: #bdc3c7;
+            margin-bottom: 25px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+            margin-right: 10px;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeito de partículas -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Efeito de carro em neón -->
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="site-header">
+        <nav class="site-nav">
+            <div class="site-logo">AutoMega</div>
+            <div class="site-user">
+                <span>Cliente</span>
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Usuário" class="site-avatar">
+            </div>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <div class="site-container">
+        <h1 class="site-title"><i class="fas fa-question-circle"></i> Dúvidas Frequentes</h1>
+        
+        <!-- Barra de Pesquisa -->
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Pesquise sua dúvida...">
+        </div>
+        
+        <!-- Categoria: Financiamento -->
+        <div class="faq-category">
+            <h2 class="category-title"><i class="fas fa-file-invoice-dollar"></i> Financiamento</h2>
+            <div class="faq-container">
+                <!-- Pergunta 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quais são as taxas de juros para financiamento?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Nossas taxas variam de 0,99% a 1,99% ao mês, dependendo do seu perfil creditício, valor da entrada e prazo escolhido. Oferecemos as melhores condições do mercado!</p>
+                            <p style="margin-top: 10px;"><strong>Exemplo:</strong> Para um veículo de R$ 50.000,00 com entrada de 30% e prazo de 48 meses, a taxa média é de 1,2% a.m.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Qual o prazo máximo para financiar um veículo?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>O prazo máximo é de 60 meses (5 anos) para veículos novos e 48 meses (4 anos) para seminovos. Consulte nossas condições especiais para profissionais liberais e servidores públicos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Preciso de fiador para financiar?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Não! Na AutoMega você pode financiar sem fiador através dos nossos parceiros financeiros. Basta comprovar renda e ter um bom score de crédito.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Categoria: Documentação -->
+        <div class="faq-category">
+            <h2 class="category-title"><i class="fas fa-file-alt"></i> Documentação</h2>
+            <div class="faq-container">
+                <!-- Pergunta 4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quais documentos preciso para comprar um carro?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Documentação básica necessária:</p>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                <li>RG e CPF (originais e cópias)</li>
+                                <li>Comprovante de residência atualizado</li>
+                                <li>Comprovante de renda (holerite ou declaração)</li>
+                                <li>CNH válida</li>
+                                <li>Certidão de casamento (se casado)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quanto tempo demora a transferência do veículo?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>O processo de transferência leva em média 5 dias úteis após a aprovação do financiamento e pagamento. Nós cuidamos de todo o processo para você!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Categoria: Garantia -->
+        <div class="faq-category">
+            <h2 class="category-title"><i class="fas fa-shield-alt"></i> Garantia e Assistência</h2>
+            <div class="faq-container">
+                <!-- Pergunta 6 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Qual a garantia dos veículos novos?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Todos os veículos novos possuem garantia de fábrica que varia de 3 a 5 anos, dependendo da montadora. Consulte nosso time para detalhes específicos do modelo que deseja.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 7 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Os seminovos têm garantia?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>Sim! Todos nossos veículos seminovos passam por rigorosa revisão e têm garantia de 3 meses ou 5.000 km (o que ocorrer primeiro). Opcionalmente, você pode contratar garantia estendida.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card de Contato -->
+        <div class="contact-card">
+            <h2 class="contact-title">Não encontrou sua dúvida?</h2>
+            <p class="contact-desc">Nossa equipe está pronta para te ajudar com qualquer questão sobre veículos, financiamento ou documentos. Entre em contato pelos canais abaixo:</p>
+            <button class="btn btn-outline"><i class="fas fa-phone-alt"></i> (11) 4002-8922</button>
+            <button class="btn"><i class="fas fa-comment-dots"></i> Chat Online</button>
+        </div>
+    </div>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Sistema de FAQ (abrir/fechar respostas)
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                
+                // Fecha outras FAQs quando uma é aberta
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Barra de pesquisa (filtro simples)
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('keyup', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer-inner').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

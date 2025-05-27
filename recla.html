@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reclamações | AutoMega</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            min-height: 100vh;
+            perspective: 1000px;
+            color: #ecf0f1;
+        }
+
+        /* Efeito 3D com partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotateX(360deg) rotateY(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Efeito de neón para o fundo */
+        .neon-car {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(44,62,80,0.2) 0%, rgba(0,0,0,0.8) 70%);
+            z-index: -1;
+        }
+
+        .neon-car::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.freepnglogos.com/uploads/car-png/car-png-24.png') center/contain no-repeat;
+            opacity: 0.05;
+            filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.05;
+                filter: drop-shadow(0 0 20px rgba(44, 62, 80, 0.7));
+            }
+            100% {
+                opacity: 0.1;
+                filter: drop-shadow(0 0 40px rgba(231, 76, 60, 0.5));
+            }
+        }
+
+        .header {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        .nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #e74c3c;
+        }
+
+        .main {
+            padding: 40px 0;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .page-subtitle {
+            color: #bdc3c7;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .complaint-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .complaint-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .complaint-form {
+            background-color: rgba(15, 23, 30, 0.85);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(44, 62, 80, 0.5);
+            border-left: 3px solid #e74c3c;
+        }
+
+        .form-title {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #e74c3c;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ecf0f1;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #ecf0f1;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #e74c3c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e74c3c'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .form-check-input {
+            margin-right: 10px;
+            accent-color: #e74c3c;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .complaint-info {
+            background-color: rgba(15, 23, 30, 0.85);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(44, 62, 80, 0.5);
+            border-left: 3px solid #e74c3c;
+        }
+
+        .info-title {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #e74c3c;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+        }
+
+        .info-item h3 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item p {
+            color: #bdc3c7;
+            line-height: 1.6;
+        }
+
+        .tracking-box {
+            background-color: rgba(44, 62, 80, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .tracking-title {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tracking-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tracking-input input {
+            flex: 1;
+        }
+
+        .status-timeline {
+            margin-top: 30px;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .status-item {
+            position: relative;
+            padding-bottom: 25px;
+            border-left: 2px solid #e74c3c;
+            padding-left: 20px;
+        }
+
+        .status-item:last-child {
+            border-left: 2px solid transparent;
+        }
+
+        .status-item::before {
+            content: '';
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+        }
+
+        .status-date {
+            color: #bdc3c7;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .status-text {
+            color: #ecf0f1;
+        }
+
+        .footer {
+            background-color: rgba(15, 23, 30, 0.9);
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+            backdrop-filter: blur(8px);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #e74c3c;
+        }
+
+        .copyright {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Efeito de partículas -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Efeito de carro em neón -->
+    <div class="neon-car"></div>
+    
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">AutoMega</div>
+                <nav class="nav">
+                    <a href="telai.html"><i class="fas fa-home"></i> Início</a>
+                    <a href="produtos.html"><i class="fas fa-car"></i> Veículos</a>
+                    <a href="recla.html" class="active"><i class="fas fa-exclamation-circle"></i> Reclamações</a>
+                    <a href="conta.html"><i class="fas fa-user"></i> Minha Conta</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Central de Reclamações</h1>
+                <p class="page-subtitle">Estamos aqui para ajudar. Registre sua reclamação e acompanhe o status de seu atendimento.</p>
+            </div>
+            
+            <div class="complaint-container">
+                <!-- Formulário de Reclamação -->
+                <div class="complaint-form">
+                    <h2 class="form-title"><i class="fas fa-edit"></i> Nova Reclamação</h2>
+                    
+                    <form>
+                        <div class="form-group">
+                            <label for="name" class="form-label">Nome Completo</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Telefone</label>
+                            <input type="tel" id="phone" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="order" class="form-label">Número do Pedido (se aplicável)</label>
+                            <input type="text" id="order" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="vehicle" class="form-label">Veículo (se aplicável)</label>
+                            <input type="text" id="vehicle" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Assunto</label>
+                            <select id="subject" class="form-control form-select" required>
+                                <option value="">Selecione...</option>
+                                <option>Problemas com veículo</option>
+                                <option>Atendimento</option>
+                                <option>Financeiro</option>
+                                <option>Entrega</option>
+                                <option>Garantia</option>
+                                <option>Outros</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">Detalhes da Reclamação</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="files" class="form-label">Anexos (comprovantes, fotos, etc.)</label>
+                            <input type="file" id="files" class="form-control" multiple>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input type="checkbox" id="terms" class="form-check-input" required>
+                            <label for="terms">Li e aceito os <a href="#" style="color: #e74c3c;">termos de tratamento de reclamações</a></label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block" style="margin-top: 20px;">
+                            <i class="fas fa-paper-plane"></i> Enviar Reclamação
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Informações e Acompanhamento -->
+                <div class="complaint-info">
+                    <h2 class="info-title"><i class="fas fa-info-circle"></i> Informações</h2>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-clock"></i> Tempo de Resposta</h3>
+                        <p>Nossa equipe se compromete a responder todas as reclamações em até 48 horas úteis.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-phone-alt"></i> Contato Direto</h3>
+                        <p>Prefere falar diretamente? Ligue para nossa Central de Atendimento: <strong style="color: #e74c3c;">0800 123 4567</strong></p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-map-marker-alt"></i> Atendimento Presencial</h3>
+                        <p>Visite nossa concessionária: Av. das Automóveis, 1234 - Centro, São Paulo/SP</p>
+                    </div>
+                    
+                    <!-- Acompanhamento de Reclamação -->
+                    <div class="tracking-box">
+                        <h3 class="tracking-title"><i class="fas fa-search"></i> Acompanhar Reclamação</h3>
+                        <p>Já registrou uma reclamação? Insira o número do protocolo abaixo:</p>
+                        
+                        <div class="tracking-input">
+                            <input type="text" class="form-control" placeholder="Nº do Protocolo">
+                            <button class="btn">Consultar</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha do Tempo (exemplo) -->
+                    <div class="status-timeline">
+                        <h3 style="color: #e74c3c; margin-bottom: 20px;">Status da Reclamação</h3>
+                        
+                        <div class="status-item">
+                            <div class="status-date">25/10/2023 - 14:30</div>
+                            <div class="status-text">Reclamação registrada</div>
+                        </div>
+                        
+                        <div class="status-item">
+                            <div class="status-date">26/10/2023 - 09:15</div>
+                            <div class="status-text">Em análise pela equipe técnica</div>
+                        </div>
+                        
+                        <div class="status-item">
+                            <div class="status-date">27/10/2023 - 16:40</div>
+                            <div class="status-text">Solução proposta: Agendamento para reparo</div>
+                        </div>
+                        
+                        <div class="status-item">
+                            <div class="status-date">28/10/2023 - 11:00</div>
+                            <div class="status-text">Aguardando sua confirmação</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="quemsomos.html"><i class="fas fa-info-circle"></i> Sobre Nós</a>
+                <a href="seguro.html"><i class="fas fa-shield-alt"></i> Segurança</a>
+                <a href="duvidasfrequentes.html"><i class="fas fa-question-circle"></i> Dúvidas</a>
+                <a href="contato.html"><i class="fas fa-phone"></i> Contato</a>
+            </div>
+            <p class="copyright">© 2023 AutoMega - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Criar partículas dinâmicas
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Máscara para telefone
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) value = `(${value.substring(0, 2)}`;
+            if (value.length > 3) value = `${value}) ${value.substring(3, 8)}`;
+            if (value.length > 10) value = `${value.substring(0, 10)}-${value.substring(10, 15)}`;
+            e.target.value = value.substring(0, 15);
+        });
+
+        // Validação do formulário
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validação básica
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!name || !email || !phone || !subject || !message || !terms) {
+                alert('Por favor, preencha todos os campos obrigatórios e aceite os termos.');
+                return;
+            }
+            
+            // Simulação de envio
+            alert('Reclamação enviada com sucesso! Número do protocolo: AM-' + Math.floor(Math.random() * 1000000));
+            
+            // Aqui você poderia enviar os dados para um servidor
+            // console.log('Reclamação enviada:', { name, email, phone, subject, message });
+        });
+    </script>
+</body>
+</html>
